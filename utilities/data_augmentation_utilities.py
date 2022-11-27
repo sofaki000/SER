@@ -15,6 +15,12 @@ def add_noise(data):
     return data
 
 def stretch(data, rate=0.8):
+    #returns a smaller array - must transform to return an array with the same size
+    #as the other data augmentation processes
+    stretched_data =  librosa.effects.time_stretch(data, rate)
+    if len(stretched_data) < len (data):
+
+        stretched_data.append
     return librosa.effects.time_stretch(data, rate)
 
 def shift(data):
