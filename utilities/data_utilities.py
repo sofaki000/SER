@@ -1,5 +1,5 @@
 from sklearn import preprocessing
-from data_handler import load_feel_test, load_test_data
+from data_utilities.data_handler import load_test_data
 import numpy as np
 
 

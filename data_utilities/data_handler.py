@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 
+import configuration
 from utilities.noise_utilities import augment_data_and_extract_mfcc
 import warnings
 import os
@@ -10,7 +11,7 @@ warnings.filterwarnings('ignore')
 def load_feeling(feelings):
     paths = []
     labels = []
-    path = 'data/test'
+    path = '../data/test'
     # path = '../TESS Toronto emotional speech set data'
     if os.path.exists(path) is False:
         raise Exception("Can't find dataa")
@@ -37,7 +38,7 @@ def load_feeling(feelings):
 def loadTestSet():
     paths = []
     labels = []
-    path =  'data/test_data'
+    path =  configuration.data_path
     if os.path.exists(path) is False:
         raise Exception("Can't find data")
     counter =0
@@ -65,7 +66,7 @@ def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
     #X_mfcc = df['speech'].apply(lambda x: augment_data_and_extract_mfcc(x))
     X_mfcc = []
     for sample in df['speech']:
-        array_with_augmented_features  =augment_data_and_extract_mfcc(sample)
+        array_with_augmented_features  = augment_data_and_extract_mfcc(sample)
         for array in array_with_augmented_features:
             X_mfcc.append(array)
 

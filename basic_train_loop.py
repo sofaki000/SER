@@ -1,5 +1,5 @@
 from utilities.data_utilities import get_transformed_data
-from models import get_model
+from saved_models import get_model
 from utilities.plot_utilities import plot_test_and_train_acc
 
 x_train, y_train, x_test, y_test = get_transformed_data()

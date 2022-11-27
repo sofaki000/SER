@@ -30,9 +30,7 @@ def augment_data_and_extract_mfcc(filename):
     mfcc1 = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
     mfcc2 = np.mean(librosa.feature.mfcc(y=pitched_data, sr=sampling_rate, n_mfcc=40).T, axis=0)
     mfcc3 = np.mean(librosa.feature.mfcc(y=streched_data, sr=sampling_rate, n_mfcc=40).T, axis=0)
-
     mfcc_features = np.vstack((mfcc,mfcc2, mfcc3, mfcc1))
-
     return  mfcc_features
 
 def show_wave(data, sr, emotion):
