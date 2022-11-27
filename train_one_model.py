@@ -11,4 +11,4 @@ model = get_model(num_of_output_classes=5,
                   input_dim=40,
                   lr=configuration.learning_rate)
 
-history = train_model(model, x_train, y_train, x_test, y_test,configuration.n_epochs)
+history = train_model(model, x_train, y_train, x_test, y_test, configuration.n_epochs)
