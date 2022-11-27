@@ -10,8 +10,8 @@ def plot_test_and_train_acc(file_name,title, history):
     ax.plot(history.history['val_accuracy'], color='g', label='Test accuracy')
     fig.suptitle(title, fontsize=10)
     plt.xlabel('Epochs', fontsize=10)
-    plt.legend()
     plt.ylabel('Accuracy', fontsize=10)
+    plt.legend()
     fig.savefig(file_name)
 
 def plot_test_acc(file_name,title, accuracy):
