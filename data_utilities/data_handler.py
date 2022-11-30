@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
-from utilities.noise_utilities import augment_data, extract_mfcc, get_zcr_data, get_rms_value, get_spectral_centroid
+from utilities.noise_utilities import augment_data, extract_features
 import configuration
 import warnings
 import os
@@ -64,22 +64,20 @@ def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
     samples_size = len(labels)
     # for each speech sample apply function extract_mfcc
     #X_mfcc = df['speech'].apply(lambda x: augment_data_and_extract_mfcc(x))
-    X_mfcc = []
+    input_features = []
+    #TODO: maybe dyo loads ena apo to dataframe ena apo ta augmented???//
     for sample in df['speech']:
         #gia kathe deigma kanoume augment data & extract features edw
-        augmented_data, sr = augment_data(sample) #all data instances for this sample
-        #apo kathe sample dld kathe seira tou augmented data kanw extract features
-        array_with_mfcc_features = np.apply_along_axis(extract_mfcc, 1, augmented_data, sr)
-        array_with_rms_features = np.apply_along_axis(get_rms_value, 1, augmented_data)
-        array_with_zcr_data = np.apply_along_axis(get_zcr_data, 1, augmented_data)
-        array_with_sc_data =np.apply_along_axis(get_spectral_centroid, 1 ,augmented_data)
-        ##edw giati mou ta kanei 3d h kwlomalakia??????
-        print("Data", array_with_sc_data.shape, array_with_rms_features.shape, array_with_zcr_data.shape, array_with_sc_data.shape)
-        array_with_augmented_features = [] #TODO:change
-        for array in array_with_augmented_features:
-            X_mfcc.append(array)
+        data, pitched_data, stretched_data, noisy_data, sr = augment_data(sample) #all data instances for this sample
+        raw_data_features = extract_features(data, sr)
+        pitched_data_features = extract_features(pitched_data, sr)
+        stretched_data_features = extract_features(stretched_data, sr)
+        noisy_data_features = extract_features(noisy_data, sr)
+        input_features.append(raw_data_features)
+        input_features.append(pitched_data_features)
+        input_features.append(stretched_data_features)
+        input_features.append(noisy_data_features)
 
-    input_features = [x for x in X_mfcc]
     input_features = np.array(input_features)  # samples x n_features
     enc = encoder()
 

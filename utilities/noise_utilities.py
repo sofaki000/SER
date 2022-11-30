@@ -25,21 +25,17 @@ def augment_data(filename):
     stretched_data = stretch(data)
     noisy_data = add_noise(data)
     #print(data.shape, "pitched",pitched_data.shape ,"/nstr", stretched_data.shape, "/nnoisy dt",noisy_data.shape)
-    input = (data, pitched_data, stretched_data, noisy_data)
-    augmented_data = np.vstack(input)
-    print(augmented_data.shape)
-    return augmented_data, sampling_rate
+    #input = (data, pitched_data, stretched_data, noisy_data)
+    #TODO: return 4 matrices
+    return data,pitched_data, stretched_data, noisy_data, sampling_rate
 
-def extract_mfcc(data, sampling_rate):
-    mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
-    return mfcc
 
 def show_wave(data, sr, emotion):
     plt.figure(figsize=(10, 4))
     plt.title(emotion, size=20)
     librosa.display.waveshow(data, sr=sr)
     plt.show()
-
+#TODO: check an megethos arxeioy mas ikanopoiei na einai diaforetiko
 def show_spectrogram(data, sr, emotion):
     x = librosa.stft(data)
     xdb = librosa.amplitude_to_db(abs(x))
@@ -49,6 +45,19 @@ def show_spectrogram(data, sr, emotion):
     plt.colorbar()
 
 #More features of .wav files
+
+def extract_features(data, sampling_rate):
+    mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
+    S, phase = librosa.magphase(librosa.stft(data))
+    rms = librosa.feature.rms(S=S)  # gets rms from spectrogram of data
+    zcr_in_frame = librosa.feature.zero_crossing_rate(data)
+    sc = librosa.feature.spectral_centroid(S=S)
+    features = np.concatenate((mfcc, rms[0], zcr_in_frame[0], sc[0]))
+    return features
+
+def extract_mfcc(data, sampling_rate):
+    mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
+    return mfcc
 
 def get_rms_value(data):
     S, phase = librosa.magphase(librosa.stft(data))
