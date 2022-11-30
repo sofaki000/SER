@@ -40,13 +40,13 @@ def loadTestSet(dataset_number_to_load=0):
     labels = []
     path = configuration.data_path
 
-    if dataset_number_to_load==0: # fortwnei 5 samples
+    if dataset_number_to_load==0: # fortwnei 5 samples ,output_classes=5
         path = f'{configuration.data_path}test'
     elif dataset_number_to_load==1:# fortwnei kamia 100 samples
         path =  path = f'{configuration.data_path}test_data'
-    elif dataset_number_to_load==2:# fortwnei kamia 1000 samples
+    elif dataset_number_to_load==2:# fortwnei kamia 1000 samples, output_classes=6
         path =  path = f'{configuration.data_path}test_data2'
-    elif dataset_number_to_load==3:# fortwnei kamia 5000 samples
+    elif dataset_number_to_load==3:# fortwnei kamia 5000 samples, output_classes=7
         path =  path = f'{configuration.data_path}test_data3'
     elif dataset_number_to_load==4:# fortwnei olo to tess toronto dataset
         path =  path = f'{configuration.data_path}test_data3'

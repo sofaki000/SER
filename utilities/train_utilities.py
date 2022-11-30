@@ -5,7 +5,7 @@ import configuration
 
 def get_callbacks_for_training(best_model_name="best_model"):
     # patience: how many epochs we wait with no improvement before we stop training
-    es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=20)
+    es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=30)
     mc = ModelCheckpoint(f'{configuration.saved_models_path}{best_model_name}.h5',
                          monitor='val_loss',
                          mode='min',
