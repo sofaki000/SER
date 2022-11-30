@@ -16,25 +16,28 @@ def get_autoencoder_model(n_inputs, compress=True ):
     e = LeakyReLU()(e)
     # encoder level 2
     #e = Dense(n_inputs)(e)
-    e = Dense(512, activation='relu')(e)
+    e = Dense(512, activation='linear')(e)
     e = BatchNormalization()(e)
-    e = LeakyReLU()(e)
+    #e = LeakyReLU()(e)
     # bottleneck
     if compress: # with bottleneck: with compression
         n_bottleneck = round( float(n_inputs) / 2.0)
     else: # without bottle neck: n_inputs (using same number of nodes), without compression
         n_bottleneck = n_inputs
-    bottleneck = Dense(n_bottleneck, activation='relu')(e)
+    # bottleneck = Dense(n_bottleneck)(e)
+    # bottleneck = Dense(n_bottleneck, activation='tanh')(e)
+    bottleneck = Dense(512, activation='linear')(e)
     # define decoder, level 1
-    d = Dense(n_inputs, activation='relu')(bottleneck)
+    d = Dense(n_inputs, activation='linear')(bottleneck)
     d = BatchNormalization()(d)
-    d = LeakyReLU()(d)
+    #d = LeakyReLU()(d)
     # decoder level 2
-    d = Dense(n_inputs * 2)(d)
+    d = Dense(n_inputs * 2, activation='linear')(d)
     d = BatchNormalization()(d)
-    d = LeakyReLU()(d)
+    #d = LeakyReLU()(d)
     # output layer
-    output = Dense(n_inputs, activation='linear')(d)
+    # output = Dense(n_inputs, activation='linear')(d)
+    output = Dense(n_inputs, activation='softmax')(d)
     # define autoencoder model
     model = Model(inputs=visible, outputs=output)
     # compile autoencoder model
@@ -83,10 +86,10 @@ print(train_acc_autoencoder_model_content)
 title_loss_with_autoencoder = f"autoencoder loss ,lr:{autoencoder_config.learning_rate},Samples:{n_samples}, Epochs:{epoch_training_stopped_for_model_with_encoder}, Test acc:{acc_test_autoencoder:.3f}, Train acc:{acc_train_autoencoder:.3f}"
 title_acc_with_autoencoder = f"autoencoder accuracy, Test acc:{acc_test_autoencoder:.3f}, Train acc:{acc_train_autoencoder:.3f}"
 
-plot_validation_and_train_loss("autoencoder_loss.png",
+plot_validation_and_train_loss("autoencoder_loss_v2.png",
                                title_loss_with_autoencoder,
                                autoencoder_history)
-plot_validation_and_train_acc("autoencoder_acc.png",
+plot_validation_and_train_acc("autoencoder_acc_v2.png",
                               title_acc_with_autoencoder,
                               autoencoder_history)
 
