@@ -7,6 +7,8 @@ def get_model(num_of_output_classes,input_dim, lr=0.01):
 	model = Sequential()
 	model.add(Dense(15, input_dim=input_dim, activation='relu'))
 	model.add(BatchNormalization())
+	model.add(Dense(15, input_dim=input_dim, activation='relu'))
+	model.add(BatchNormalization())
 	model.add(Dense(num_of_output_classes, activation='softmax'))
 	optimizer = optim.Adam(learning_rate=lr)
 	model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])

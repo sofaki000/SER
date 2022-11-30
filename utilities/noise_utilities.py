@@ -24,13 +24,15 @@ def augment_data(filename):
     pitched_data = pitch(data, sampling_rate)
     stretched_data = stretch(data)
     noisy_data = add_noise(data)
-    augmented_data = np.vstack(data, pitched_data, stretched_data, noisy_data)
+    #print(data.shape, "pitched",pitched_data.shape ,"/nstr", stretched_data.shape, "/nnoisy dt",noisy_data.shape)
+    input = (data, pitched_data, stretched_data, noisy_data)
+    augmented_data = np.vstack(input)
+    print(augmented_data.shape)
     return augmented_data, sampling_rate
 
 def extract_mfcc(data, sampling_rate):
     mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
     return mfcc
-
 
 def show_wave(data, sr, emotion):
     plt.figure(figsize=(10, 4))
@@ -53,10 +55,9 @@ def get_rms_value(data):
     rms = librosa.feature.rms(S=S) #gets rms from spectrogram of data
     return rms
 
-def get_zcr_data(data): #zero crossing rate
+def get_zcr_data(data): #zero crossing rate - thelei ena extra check
     zcr_in_frame = librosa.feature.zero_crossing_rate(data)
-    zcr = sum(librosa.zero_crossings(data))
-    return zcr_in_frame, zcr
+    return zcr_in_frame
 
 def get_spectral_centroid(data):
     S, phase = librosa.magphase(librosa.stft(data))

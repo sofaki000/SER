@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
-
-from utilities.noise_utilities import augment_data, extract_mfcc
+from utilities.noise_utilities import augment_data, extract_mfcc, get_zcr_data, get_rms_value, get_spectral_centroid
+import configuration
 import warnings
 import os
 warnings.filterwarnings('ignore')
@@ -10,7 +10,7 @@ warnings.filterwarnings('ignore')
 def load_feeling(feelings):
     paths = []
     labels = []
-    path = 'data/test'
+    path = '../data/test'
     # path = '../TESS Toronto emotional speech set data'
     if os.path.exists(path) is False:
         raise Exception("Can't find dataa")
@@ -37,7 +37,7 @@ def load_feeling(feelings):
 def loadTestSet():
     paths = []
     labels = []
-    path = 'data/test'
+    path = 'C:/Users/user/Desktop/Speech Emotion Recognition Project/github - ser/SER/data/test'
     if os.path.exists(path) is False:
         raise Exception("Can't find data")
     counter =0
@@ -56,36 +56,30 @@ def loadTestSet():
     print('Dataset is Loaded')
     return paths, labels
 
+
 def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
     df = pd.DataFrame()
     df['speech'] = paths
     df['label'] = labels
     samples_size = len(labels)
     # for each speech sample apply function extract_mfcc
-    #features = df['speech'].apply(lambda x: augment_data_and_extract_mfcc(x))
-    features = []
-
-    #TODO: Implement features as a pandas dataframe
+    #X_mfcc = df['speech'].apply(lambda x: augment_data_and_extract_mfcc(x))
+    X_mfcc = []
     for sample in df['speech']:
-        augmented_data, sr = augment_data(sample) #returns all data!!
-        array_with_mfcc_features = extract_mfcc(augmented_data, sr)
-        array_with_rms_features = get_rms_value(augmented_data)
-        array_with_zcr_data = get_zcr_data(augmented_data)
-        array_with_sc_data = get_spectral_centroid(augmenteddata)
-        for array in array_with_mfcc_features:
-            features.append(array)
-        for array in array_with_rms_features:
-            features.append(array)
-        for array in array_with_zcr_data:
-            features.append(array)
-        for array in array_with_zcr_data:
-            features.append(array)
+        #gia kathe deigma kanoume augment data & extract features edw
+        augmented_data, sr = augment_data(sample) #all data instances for this sample
+        #apo kathe sample dld kathe seira tou augmented data kanw extract features
+        array_with_mfcc_features = np.apply_along_axis(extract_mfcc, 1, augmented_data, sr)
+        array_with_rms_features = np.apply_along_axis(get_rms_value, 1, augmented_data)
+        array_with_zcr_data = np.apply_along_axis(get_zcr_data, 1, augmented_data)
+        array_with_sc_data =np.apply_along_axis(get_spectral_centroid, 1 ,augmented_data)
+        ##edw giati mou ta kanei 3d h kwlomalakia??????
+        print("Data", array_with_sc_data.shape, array_with_rms_features.shape, array_with_zcr_data.shape, array_with_sc_data.shape)
+        array_with_augmented_features = [] #TODO:change
+        for array in array_with_augmented_features:
+            X_mfcc.append(array)
 
-
-
-    input_features = [x for x in features]
-    print(input_features)
-    #TODO: Add features to the input features
+    input_features = [x for x in X_mfcc]
     input_features = np.array(input_features)  # samples x n_features
     enc = encoder()
 
@@ -103,7 +97,6 @@ def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
     X_train = input_features[data_split:]
     y_train = actual_labels[data_split:]
     return X_train, y_train, X_test, y_test
-
 
 def load_test_data():
     print("loading test data is called")
