@@ -4,11 +4,11 @@ from keras.utils import to_categorical
 from numpy import array, argmax
 from sklearn.metrics import accuracy_score
 
-from models import get_model
+from keras_models.models import get_model
 # fit and evaluate a neural net model on the dataset
 from numpy import mean, std
 
-from models import get_trained_model
+from keras_models.models import get_trained_model
 
 def evaluate_model(model, trainX, trainy, testX, testy, epochs):
 	model.fit(trainX, trainy, epochs=epochs, verbose=0)

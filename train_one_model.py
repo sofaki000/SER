@@ -1,6 +1,6 @@
 import configuration
+from keras_models.models import get_model
 from utilities.data_utilities import get_transformed_data
-from models import get_model
 from utilities.train_utilities import train_model
 
 # loading train and test data

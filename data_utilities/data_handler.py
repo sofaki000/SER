@@ -35,10 +35,22 @@ def load_feeling(feelings):
 
 # paths, labels = load_feeling(["angry", "Sad"])
 # print(paths)
-def loadTestSet():
+def loadTestSet(dataset_number_to_load=0):
     paths = []
     labels = []
-    path =  configuration.data_path
+    path = configuration.data_path
+
+    if dataset_number_to_load==0: # fortwnei 5 samples
+        path = f'{configuration.data_path}test'
+    elif dataset_number_to_load==1:# fortwnei kamia 100 samples
+        path =  path = f'{configuration.data_path}test_data'
+    elif dataset_number_to_load==2:# fortwnei kamia 1000 samples
+        path =  path = f'{configuration.data_path}test_data2'
+    elif dataset_number_to_load==3:# fortwnei kamia 5000 samples
+        path =  path = f'{configuration.data_path}test_data3'
+    elif dataset_number_to_load==4:# fortwnei olo to tess toronto dataset
+        path =  path = f'{configuration.data_path}test_data3'
+
     if os.path.exists(path) is False:
         raise Exception("Can't find data")
     counter =0
@@ -50,8 +62,6 @@ def loadTestSet():
             label = filename.split('_')[-1]
             label = label.split('.')[0]
             labels.append(label.lower())
-        # if len(paths) == 2800:
-        #     break
         if len(paths) == 2:
             break
     print('Dataset is Loaded')
@@ -62,8 +72,7 @@ def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
     df['speech'] = paths
     df['label'] = labels
     samples_size = len(labels)
-    # for each speech sample apply function extract_mfcc
-    #X_mfcc = df['speech'].apply(lambda x: augment_data_and_extract_mfcc(x))
+
     X_mfcc = []
     for sample in df['speech']:
         array_with_augmented_features  = augment_data_and_extract_mfcc(sample)
@@ -90,9 +99,9 @@ def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
     return X_train, y_train, X_test, y_test
 
 
-def load_test_data():
+def load_test_data(dataset_number_to_load=0):
     print("loading test data is called")
-    paths, labels = loadTestSet()
+    paths, labels = loadTestSet(dataset_number_to_load)
     return loadDataFromPathAndLabels(paths, labels)
 
 

@@ -1,6 +1,6 @@
+from keras_models.models import get_model
 from utilities.data_utilities import get_transformed_data
-from saved_models import get_model
-from utilities.plot_utilities import plot_test_and_train_acc
+from utilities.plot_utilities import plot_validation_and_train_acc
 
 x_train, y_train, x_test, y_test = get_transformed_data()
 n_epochs = 200
@@ -16,4 +16,4 @@ _, test_acc = model.evaluate(x_test, y_test, verbose=0)
 print('Train: %.3f, Test: %.3f' % (train_acc, test_acc))
 title=f'Epochs:{n_epochs}, lr:{learning_rate}'
 
-plot_test_and_train_acc("results/one_model_accuracy",title, history)
+plot_validation_and_train_acc("experiments_results/one_model_accuracy", title, history)
