@@ -37,7 +37,7 @@ def load_feeling(feelings):
 def loadTestSet():
     paths = []
     labels = []
-    path =  'data/test_data'
+    path =  'C:\\Users\\user\\Documents\\SpeechEmotionRecognition-ERGASIA-2022\\code\\SER\\data\\test'
     if os.path.exists(path) is False:
         raise Exception("Can't find data")
     counter =0
@@ -62,7 +62,7 @@ def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
     df['label'] = labels
     samples_size = len(labels)
     # for each speech sample apply function extract_mfcc
-    #X_mfcc = df['speech'].apply(lambda x: augment_data_and_extract_mfcc(x))
+    X_mfcc = df['speech'].apply(lambda x: augment_data_and_extract_mfcc(x))
     X_mfcc = []
     for sample in df['speech']:
         array_with_augmented_features  =augment_data_and_extract_mfcc(sample)
