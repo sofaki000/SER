@@ -67,6 +67,7 @@ def loadTestSet(dataset_number_to_load=0):
     print('Dataset is Loaded')
     return paths, labels
 
+
 def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
     df = pd.DataFrame()
     df['speech'] = paths

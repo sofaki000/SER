@@ -2,8 +2,10 @@
 import os
 import configuration
 
-experiments_folder  = 'C:\\Users\\Lenovo\\Desktop\\ser\\SER\\experiments_results\\autoencoder_experiments\\optimal_model_with_autoencoder\\whole\\'
+experiments_folder = 'C:\\Users\\Lenovo\\Desktop\\ser\\SER\\experiments_results\\autoencoder_experiments\\optimal_model_with_autoencoder\\autoencoder\\'
+
 os.makedirs(experiments_folder, exist_ok=True)
+
 n_epochs = 200
 learning_rate = 0.001
 batch_size = 1
