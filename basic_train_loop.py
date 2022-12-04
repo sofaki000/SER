@@ -16,4 +16,4 @@ _, test_acc = model.evaluate(x_test, y_test, verbose=0)
 print('Train: %.3f, Test: %.3f' % (train_acc, test_acc))
 title=f'Epochs:{n_epochs}, lr:{learning_rate}'
 
-plot_validation_and_train_acc("experiments_results/one_model_accuracy", title, history)
+plot_validation_and_train_acc("experiments_results_graphs/one_model_accuracy", title, history)

@@ -2,12 +2,15 @@ from keras import Input, Model
 from keras.layers import Dense, LeakyReLU, BatchNormalization, Conv2D, Conv1D, MaxPooling1D, Conv1DTranspose, Flatten
 from keras.utils import plot_model
 import tensorflow as tf
+
+import configuration
 import experiments_configuration.autoencoder_exp_config as autoencoder_config
 from utilities.data_utilities import get_transformed_data
 from utilities.plot_utilities import plot_validation_and_train_loss, plot_validation_and_train_acc
 from utilities.train_utilities import get_callbacks_for_training
 
-f = open("test_results_for_autoencoder.txt", "a")
+f = open(f"{configuration.experiments_results_text_path}/test_results_for_autoencoder.txt", "a")
+
 f.write("------------ new experiment----------------\n")
 
 def get_cnn_autoencoder(n_inputs):
@@ -102,51 +105,50 @@ def get_autoencoder_model(n_inputs, compress=True ):
     return model
 
 
+# this method tests how good our autoencoder models are
+def test_autoencoder():
+    ##### to see how well autoencoder performs alone:
+    x_train, y_train, x_test, y_test = get_transformed_data(dataset_number_to_load=2)
+    output_classes = 5 # how many classes we have to classify
+    n_samples = x_train.shape[0]
+    n_inputs = x_train.shape[1] # number of features
 
-##### to see how well autoencoder performs alone:
-autoencoder_saved_with_compress_path = f'{autoencoder_config.saved_models_path}autoencoder.h5'
+    ############################# DEFINING AND TRAINING THE ENCODER
+    autoencoder_model = get_cnn_autoencoder(n_inputs)
+    training_callbacks_autoencoder = get_callbacks_for_training(best_model_name="best_autoencoder_model")
 
-x_train, y_train, x_test, y_test = get_transformed_data(dataset_number_to_load=2)
-output_classes = 5 # how many classes we have to classify
-n_samples = x_train.shape[0]
-n_inputs = x_train.shape[1] # number of features
+    # fit the autoencoder model to reconstruct input
+    autoencoder_history = autoencoder_model.fit(x_train,  x_train,
+                                    epochs=autoencoder_config.n_epochs,
+                                    verbose=2,
+                                    validation_split=autoencoder_config.validation_split,
+                                    callbacks=training_callbacks_autoencoder)
 
-############################# DEFINING AND TRAINING THE ENCODER
-autoencoder_model = get_cnn_autoencoder(n_inputs)
-training_callbacks_autoencoder = get_callbacks_for_training(best_model_name="best_autoencoder_model")
+    epoch_training_stopped_for_model_with_encoder = training_callbacks_autoencoder[0].stopped_epoch
+    if epoch_training_stopped_for_model_with_encoder==0:
+        epoch_training_stopped_for_model_with_encoder = autoencoder_config.n_epochs
 
-# fit the autoencoder model to reconstruct input
-autoencoder_history = autoencoder_model.fit(x_train,  x_train,
-                                epochs=autoencoder_config.n_epochs,
-                                verbose=2,
-                                validation_split=autoencoder_config.validation_split,
-                                callbacks=training_callbacks_autoencoder)
+    # make predictions on the test set and calculate classification accuracy
+    _, acc_test_autoencoder = autoencoder_model.evaluate(x_test, x_test)
+    _, acc_train_autoencoder = autoencoder_model.evaluate(x_train, x_train)
+    acc_test_autoencoder_model_content = f'Test Accuracy autoencoder:{acc_test_autoencoder}\n'
+    train_acc_autoencoder_model_content = f'Train Accuracy autoencoder:{acc_train_autoencoder}\n'
+    # saving results to file
+    f.write(acc_test_autoencoder_model_content)
+    f.write(train_acc_autoencoder_model_content)
+    # printing results
+    print(acc_test_autoencoder_model_content)
+    print(train_acc_autoencoder_model_content)
 
-epoch_training_stopped_for_model_with_encoder = training_callbacks_autoencoder[0].stopped_epoch
-if epoch_training_stopped_for_model_with_encoder==0:
-    epoch_training_stopped_for_model_with_encoder = autoencoder_config.n_epochs
+    title_loss_with_autoencoder = f"autoencoder loss ,lr:{autoencoder_config.learning_rate},Samples:{n_samples}, Epochs:{epoch_training_stopped_for_model_with_encoder}, Test acc:{acc_test_autoencoder:.3f}, Train acc:{acc_train_autoencoder:.3f}"
+    title_acc_with_autoencoder = f"autoencoder accuracy, Test acc:{acc_test_autoencoder:.3f}, Train acc:{acc_train_autoencoder:.3f}"
 
-# make predictions on the test set and calculate classification accuracy
-_, acc_test_autoencoder = autoencoder_model.evaluate(x_test, x_test)
-_, acc_train_autoencoder = autoencoder_model.evaluate(x_train, x_train)
-acc_test_autoencoder_model_content = f'Test Accuracy autoencoder:{acc_test_autoencoder}\n'
-train_acc_autoencoder_model_content = f'Train Accuracy autoencoder:{acc_train_autoencoder}\n'
-# saving results to file
-f.write(acc_test_autoencoder_model_content)
-f.write(train_acc_autoencoder_model_content)
-# printing results
-print(acc_test_autoencoder_model_content)
-print(train_acc_autoencoder_model_content)
+    plot_validation_and_train_loss("autoencoder_loss_cnn_less_neurons_d2.png",
+                                   title_loss_with_autoencoder,
+                                   autoencoder_history)
 
-title_loss_with_autoencoder = f"autoencoder loss ,lr:{autoencoder_config.learning_rate},Samples:{n_samples}, Epochs:{epoch_training_stopped_for_model_with_encoder}, Test acc:{acc_test_autoencoder:.3f}, Train acc:{acc_train_autoencoder:.3f}"
-title_acc_with_autoencoder = f"autoencoder accuracy, Test acc:{acc_test_autoencoder:.3f}, Train acc:{acc_train_autoencoder:.3f}"
+    plot_validation_and_train_acc("autoencoder_acc_cnn_less_neurons_d2.png",
+                                  title_acc_with_autoencoder,
+                                  autoencoder_history)
 
-plot_validation_and_train_loss("autoencoder_loss_cnn_less_neurons_d2.png",
-                               title_loss_with_autoencoder,
-                               autoencoder_history)
-
-plot_validation_and_train_acc("autoencoder_acc_cnn_less_neurons_d2.png",
-                              title_acc_with_autoencoder,
-                              autoencoder_history)
-
-f.close()
+    f.close()
