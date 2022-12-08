@@ -44,16 +44,19 @@ def show_spectrogram(data, sr, emotion):
     librosa.display.specshow(xdb, sr=sr, x_axis='time', y_axis='hz')
     plt.colorbar()
 
-#More features of .wav files
+
 
 def extract_features(data, sampling_rate):
+    from librosa.feature import spectral
     mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
-    S, phase = librosa.magphase(librosa.stft(data))
-    rms = librosa.feature.rms(S=S)  # gets rms from spectrogram of data
-    zcr_in_frame = librosa.feature.zero_crossing_rate(data)
-    sc = librosa.feature.spectral_centroid(S=S)
-    features = np.concatenate((mfcc, rms[0], zcr_in_frame[0], sc[0]))
-    return features
+    mfcc_delta = librosa.feature.delta(mfcc, order=1, mode='nearest')
+    mfcc_delta2 = librosa.feature.delta(mfcc, order=2, mode='nearest')
+    zero_crossing_rate = np.mean(sum(spectral.zero_crossing_rate(y=data, frame_length=512, hop_length=256)))
+    freqs, times, D = librosa.reassigned_spectrogram(data, fill_nan=True)
+    sc = np.mean(librosa.feature.spectral_centroid(S=np.abs(D), freq=freqs))
+    feature_vector = np.concatenate((mfcc, mfcc_delta, mfcc_delta2, np.array([zero_crossing_rate]), np.array([sc])), axis=0)
+    feature_vector = np.reshape(feature_vector, (1, len(feature_vector)))
+    return feature_vector
 
 def extract_mfcc(data, sampling_rate):
     mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)

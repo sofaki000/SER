@@ -64,36 +64,33 @@ def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
     samples_size = len(labels)
     # for each speech sample apply function extract_mfcc
     #X_mfcc = df['speech'].apply(lambda x: augment_data_and_extract_mfcc(x))
-    input_features = []
+    list_of_features = []
     #TODO: maybe dyo loads ena apo to dataframe ena apo ta augmented???//
     for sample in df['speech']:
         #gia kathe deigma kanoume augment data & extract features edw
         data, pitched_data, stretched_data, noisy_data, sr = augment_data(sample) #all data instances for this sample
-        raw_data_features = extract_features(data, sr)
-        pitched_data_features = extract_features(pitched_data, sr)
-        stretched_data_features = extract_features(stretched_data, sr)
-        noisy_data_features = extract_features(noisy_data, sr)
-        input_features.append(raw_data_features)
-        input_features.append(pitched_data_features)
-        input_features.append(stretched_data_features)
-        input_features.append(noisy_data_features)
-
-    input_features = np.array(input_features)  # samples x n_features
+        raw_features = np.array(extract_features(data, sr))
+        pitched_features = np.array(extract_features(pitched_data, sr))
+        stretched_features = extract_features(stretched_data, sr)
+        noisy_features = extract_features(noisy_data, sr)
+        feats = np.vstack((raw_features, pitched_features, stretched_features, noisy_features))
+        list_of_features.append(feats)
     enc = encoder()
-
+    input_features = list_of_features[0]
+    for j in range(1, len(list_of_features)):
+        input_features = np.append(input_features, list_of_features[j], axis=0)
     actual_labels = enc.fit_transform(df[['label']])
-    #TODO: we have to check the labels are correct for noisy data
+    #TODO: we have to check the labels are correct for noisy data- den einai, thelei allagh
     import scipy.sparse as sp
-    actual_labels = sp.vstack((actual_labels, actual_labels,actual_labels,actual_labels), format='csr')
-
+    actual_labels = sp.vstack((actual_labels, actual_labels, actual_labels, actual_labels), format='csr')
+#exoume 112 features
     if hasattr(actual_labels, "__len__") is False:
         actual_labels = actual_labels.toarray()
     data_split = (int)(samples_size * 0.7)
-
-    X_test = input_features[:data_split]
-    y_test = actual_labels[:data_split]
-    X_train = input_features[data_split:]
-    y_train = actual_labels[data_split:]
+    X_test = input_features[data_split:]
+    y_test = actual_labels[data_split:]
+    X_train = input_features[:data_split]
+    y_train = actual_labels[:data_split]
     return X_train, y_train, X_test, y_test
 
 def load_test_data():
