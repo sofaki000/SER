@@ -3,15 +3,15 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint
 import configuration
 
 
-def get_callbacks_for_training(best_model_name="best_model"):
+def get_callbacks_for_training(best_model_name):
     # patience: how many epochs we wait with no improvement before we stop training
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=30)
-    mc = ModelCheckpoint(f'{configuration.saved_models_path}{best_model_name}.h5',
+    #{configuration.saved_models_path}
+    mc = ModelCheckpoint(f'{best_model_name}.h5',
                          monitor='val_loss',
                          mode='min',
                          save_best_only=True,
                          verbose=1)  # callback to save best model
-
     cb_list = [es, mc]
     return cb_list
 

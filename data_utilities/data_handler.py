@@ -74,9 +74,12 @@ def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
     df['label'] = labels
     samples_size = len(labels)
 
+    samples = []
     X_mfcc = []
     for sample in df['speech']:
-        array_with_augmented_features  = augment_data_and_extract_mfcc(sample)
+        array_with_augmented_features , emotion_samples = augment_data_and_extract_mfcc(sample)
+
+        samples = np.concatenate((samples, emotion_samples))
         for array in array_with_augmented_features:
             X_mfcc.append(array)
 
@@ -91,13 +94,14 @@ def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
 
     if hasattr(actual_labels, "__len__") is False:
         actual_labels = actual_labels.toarray()
-    data_split = (int)(samples_size * 0.7)
+    data_split = (int)(samples_size * 0.0)
 
-    X_test = input_features[:data_split]
-    y_test = actual_labels[:data_split]
-    X_train = input_features[data_split:]
-    y_train = actual_labels[data_split:]
-    return X_train, y_train, X_test, y_test
+    X_test = input_features[data_split:]
+    y_test = actual_labels[data_split:]
+    X_train = X_test #input_features[data_split:]
+    y_train = y_test # actual_labels[data_split:]
+
+    return X_train, y_train, X_test, y_test,samples
 
 
 def load_test_data(dataset_number_to_load=0):

@@ -6,9 +6,11 @@ from sklearn.preprocessing import MinMaxScaler
 from data_utilities.data_handler import load_test_data
 import numpy as np
 
+from keras_models.Sample import Sample
+
 
 def get_transformed_data(dataset_number_to_load=0):
-    X_train, y_train, X_test, y_test = load_test_data(dataset_number_to_load) # load_feel_test()
+    X_train, y_train, X_test, y_test,samples = load_test_data(dataset_number_to_load) # load_feel_test()
     # preprocessing
     scaler = preprocessing.StandardScaler().fit(X_train)
     scaler_test = preprocessing.StandardScaler().fit(X_test)
@@ -16,7 +18,15 @@ def get_transformed_data(dataset_number_to_load=0):
     y_test =np.float32(y_test.toarray())
     x_train = scaler.transform(X_train)
     x_test = scaler_test.transform(X_test)
-    return x_train, y_train, x_test, y_test
+
+    scaled_samples = []
+
+    for sample in samples:
+        old_features = sample.get_features()
+        name = sample.get_name()
+        scaled_sample= Sample(name= name, features=scaler.transform([old_features]))
+        scaled_samples.append(scaled_sample)
+    return x_train, y_train, x_test, y_test,scaled_samples
 
 
 def get_transformed_testing_data():

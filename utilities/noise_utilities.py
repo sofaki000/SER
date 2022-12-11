@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import librosa
 import librosa.display
 import warnings
+
+from keras_models.Sample import Sample
 from utilities.data_augmentation_utilities import add_noise, pitch, stretch
 warnings.filterwarnings('ignore')
 
@@ -20,6 +22,8 @@ def extract_mfcc(filename):
     return mfcc
 
 def augment_data_and_extract_mfcc(filename):
+    samples = []
+
     data, sampling_rate = librosa.load(filename, duration=3, offset=0.5)
 
     pitched_data = pitch(data, sampling_rate)
@@ -31,7 +35,11 @@ def augment_data_and_extract_mfcc(filename):
     mfcc2 = np.mean(librosa.feature.mfcc(y=pitched_data, sr=sampling_rate, n_mfcc=40).T, axis=0)
     mfcc3 = np.mean(librosa.feature.mfcc(y=streched_data, sr=sampling_rate, n_mfcc=40).T, axis=0)
     mfcc_features = np.vstack((mfcc,mfcc2, mfcc3, mfcc1))
-    return  mfcc_features
+
+    label = filename.split("_")[2].split('.')[0]
+    for feat in mfcc_features:
+        samples.append(Sample(features=feat, name=label))
+    return  mfcc_features, samples
 
 def show_wave(data, sr, emotion):
     plt.figure(figsize=(10, 4))

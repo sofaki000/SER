@@ -1,98 +1,133 @@
+from keras import Model
+from keras.saving.save import load_model
+from matplotlib import pyplot as plt
 
-import numpy as np
-from sklearn.preprocessing import MinMaxScaler
-
+import configuration
 from experiments_configuration import attention_exp_config
-from keras_models.attention_model import create_RNN_with_attention, create_RNN
+from keras_models.attention_model import create_RNN_with_attention, create_RNN, VisualizeAttentionMap, \
+    create_model_with_additive_attention, attention
 from utilities.data_utilities import get_transformed_data
 from utilities.train_utilities import get_callbacks_for_training
 
-
-def get_fib_seq(n, scale_data=True):
-    # Get the Fibonacci sequence
-    seq = np.zeros(n)
-    fib_n1 = 0.0
-    fib_n = 1.0
-    for i in range(n):
-        seq[i] = fib_n1 + fib_n
-        fib_n1 = fib_n
-        fib_n = seq[i]
-    scaler = []
-    if scale_data:
-        scaler = MinMaxScaler(feature_range=(0, 1))
-        seq = np.reshape(seq, (n, 1))
-        seq = scaler.fit_transform(seq).flatten()
-    return seq, scaler
-
-
-
-
-def get_fib_XY(total_fib_numbers, time_steps, train_percent, scale_data=True):
-    dat, scaler = get_fib_seq(total_fib_numbers, scale_data)
-    Y_ind = np.arange(time_steps, len(dat), 1)
-    Y = dat[Y_ind]
-    rows_x = len(Y)
-    X = dat[0:rows_x]
-    for i in range(time_steps - 1):
-        temp = dat[i + 1:rows_x + i + 1]
-        X = np.column_stack((X, temp))
-    # random permutation with fixed seed
-    rand = np.random.RandomState(seed=13)
-    idx = rand.permutation(rows_x)
-    split = int(train_percent * rows_x)
-    train_ind = idx[0:split]
-    test_ind = idx[split:]
-    trainX = X[train_ind]
-    trainY = Y[train_ind]
-    testX = X[test_ind]
-    testY = Y[test_ind]
-    trainX = np.reshape(trainX, (len(trainX), time_steps, 1))
-    testX = np.reshape(testX, (len(testX), time_steps, 1))
-    return trainX, trainY, testX, testY, scaler
-
+f = open(f"{configuration.experiments_results_text_path}/test_results_attention.txt", "a")
 
 # Generate the dataset
-#trainX, trainY, testX, testY, scaler = get_fib_XY(1200, attention_exp_config.time_steps, 0.7)
-trainX, trainY, testX, testY = get_transformed_data(dataset_number_to_load=3)
+trainX, trainY, testX, testY = get_transformed_data(dataset_number_to_load=0)
 n_samples = trainX.shape[0]
 n_inputs = trainX.shape[1] # number of features
 
-
-
-model_RNN = create_RNN(hidden_units=attention_exp_config.hidden_units,
-                       dense_units=1,
-                       input_shape=(n_inputs, 1),
-                       activation=['tanh', 'tanh'])
-
-training_callbacks = get_callbacks_for_training(best_model_name="rnn_model")
-model_RNN.fit(trainX, trainY, epochs=attention_exp_config.epochs, batch_size=1, verbose=2, callbacks=training_callbacks)
+# model_RNN = create_RNN(hidden_units=attention_exp_config.hidden_units,
+#                        dense_units=1,
+#                        input_shape=(n_inputs, 1),
+#                        activation=['tanh', 'tanh'])
+#
+# training_callbacks = get_callbacks_for_training(best_model_name="rnn_model")
+# model_RNN.fit(trainX, trainY, epochs=attention_exp_config.epochs, batch_size=1, verbose=2, callbacks=training_callbacks)
 
 # Evalute model
-train_mse = model_RNN.evaluate(trainX, trainY)
-test_mse = model_RNN.evaluate(testX, testY)
+# train_mse = model_RNN.evaluate(trainX, trainY)
+# test_mse = model_RNN.evaluate(testX, testY)
 
-# Print error
-print("Train set MSE = ", train_mse)
-print("Test set MSE = ", test_mse)
+# f.write(f"Train set MSE = {train_mse}")
+# f.write(f"Test set MSE ={test_mse}" )
+# f.close()
+# # Print error
+# print(f"Train set MSE = {train_mse}")
+# print(f"Test set MSE ={test_mse}" )
 
 ####### model with attention
 model_attention = create_RNN_with_attention(hidden_units=attention_exp_config.hidden_units,
                                             dense_units=1,
                                             input_shape=(attention_exp_config.time_steps, 1),
                                             activation='tanh')
+#
+#
+# # model_attention = create_RNN_with_attention(input_shape=40, output_classes=5)
+#
+# training_callbacks_attention = get_callbacks_for_training(best_model_name="wohoo")
+#
+# visualize_attention = VisualizeAttentionMap(model_attention, trainX)
+#
+# model_attention.fit(trainX, trainY,
+#                     epochs=attention_exp_config.epochs,
+#                     batch_size=1,
+#                     verbose=2,
+#                     callbacks=training_callbacks_attention.append(visualize_attention))
+#
+#
+# # Evalute model
+# train_mse_attn = model_attention.evaluate(trainX, trainY)
+# test_mse_attn = model_attention.evaluate(testX, testY)
+#
+# # Print error
+# print("Train set MSE with attention = ", train_mse_attn)
+# print("Test set MSE with attention = ", test_mse_attn)
+#
+#
+model_name = 'rnn_model_with_attention.h5'
+#model_attention.save(model_name)
+# model_attention.save_weights('rnn_model_with_attention')
 
 
-training_callbacks_attention = get_callbacks_for_training(best_model_name="rnn_model_with_attention")
-model_attention.fit(trainX, trainY,
-                    epochs=attention_exp_config.epochs,
-                    batch_size=1,
-                    verbose=2,
-                    callbacks=training_callbacks_attention)
+model = load_model(model_name, custom_objects={'attention': attention})
+model = Model(inputs=model.input, outputs=[model.output, model.get_layer('attention').output])
 
-# Evalute model
-train_mse_attn = model_attention.evaluate(trainX, trainY)
-test_mse_attn = model_attention.evaluate(testX, testY)
+outputs = model.predict(testX)
+model_outputs = outputs[0]
+attention_outputs = outputs[1]
 
-# Print error
-print("Train set MSE with attention = ", train_mse_attn)
-print("Test set MSE with attention = ", test_mse_attn)
+import seaborn as sns
+sns.heatmap((attention_outputs[0],attention_outputs[1]))# ,  xlabel='Keys', ylabel='Queries'
+plt.show()
+
+
+def show_heatmaps(matrices, xlabel, ylabel, titles=None, figsize=(2.5, 2.5), cmap='Reds'):
+    """Show heatmaps of matrices."""
+
+    num_rows, num_cols = len(matrices), len(matrices[0])
+    fig, axes = plt.subplots(num_rows, num_cols, figsize=figsize,  sharex=True, sharey=True, squeeze=False)
+    for i, (row_axes, row_matrices) in enumerate(zip(axes, matrices)):
+        for j, (ax, matrix) in enumerate(zip(row_axes, row_matrices)):
+            pcm = ax.imshow(matrix.detach().numpy(), cmap=cmap)
+            if i == num_rows - 1:
+                ax.set_xlabel(xlabel)
+            if j == 0:
+                ax.set_ylabel(ylabel)
+            if titles:
+                ax.set_title(titles[j])
+    fig.colorbar(pcm, ax=axes, shrink=0.6);
+
+class CharVal(object):
+    def __init__(self, char, val):
+        self.char = char
+        self.val = val
+
+    def __str__(self):
+        return self.char
+
+def rgb_to_hex(rgb):
+    return '#%02x%02x%02x' % rgb
+
+def color_charvals(s):
+    r = 255-int(s.val*255)
+    color = rgb_to_hex((255, r, r))
+    return 'background-color: %s' % color
+
+# if you are using batches the outputs will be in batches
+# get exact attentions of chars
+an_attention_output = attention_outputs[0][-len(testX):]
+
+
+# before the prediction i supposed you tokenized text
+# you need to match each char and attention
+char_vals = [CharVal(c, v) for c, v in zip(testX, attention_outputs)]
+
+import pandas as pd
+char_df = pd.DataFrame(char_vals).transpose()
+# apply coloring values
+char_df = char_df.style.applymap(color_charvals)
+
+#
+# plt.pcolormesh(attention_outputs)
+# plt.title('Attention')
+# plt.show()

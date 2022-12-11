@@ -8,3 +8,7 @@ Speech Emotion Recognition
 ATTENTION:
 https://machinelearningmastery.com/the-attention-mechanism-from-scratch/ ->theory
 https://machinelearningmastery.com/adding-a-custom-attention-layer-to-recurrent-neural-network-in-keras/
+
+
+
+visializing activation: https://raghakot.github.io/keras-vis/vis.visualization/#visualize_saliency
