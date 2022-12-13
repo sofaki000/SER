@@ -3,8 +3,14 @@
 # plot history
 from matplotlib import pyplot as plt
 
-def plot_validation_and_train_metric_from_history(history, train_metric_name, validation_metric_name,
-                                                  label_train_metric, label_validation_metric, file_name, title, y_label):
+def plot_validation_and_train_metric_from_history(history,
+                                                  train_metric_name,
+                                                  validation_metric_name,
+                                                  label_train_metric,
+                                                  label_validation_metric,
+                                                  file_name,
+                                                  title,
+                                                  y_label):
     fig, ax = plt.subplots(nrows=1, ncols=1)
     ax.plot(history.history[train_metric_name], color='r', label=label_train_metric)
     ax.plot(history.history[validation_metric_name], color='g', label=label_validation_metric)

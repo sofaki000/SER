@@ -68,51 +68,39 @@ def loadTestSet(dataset_number_to_load=0):
     return paths, labels
 
 
-def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
+def get_samples(paths, labels, encoder=OneHotEncoder):
     df = pd.DataFrame()
     df['speech'] = paths
     df['label'] = labels
-    samples_size = len(labels)
+    enc = encoder()
+    encodings = enc.fit_transform(df[['label']]).toarray()
+
+    map_with_encodings = dict({"angry":encodings[0], "disgust":encodings[1], "fear":encodings[2], "happy":encodings[3], "neutral":encodings[4]})
 
     samples = []
-    X_mfcc = []
     for sample in df['speech']:
-        array_with_augmented_features , emotion_samples = augment_data_and_extract_mfcc(sample)
-
+        array_with_augmented_features, emotion_samples = augment_data_and_extract_mfcc(sample,map_with_encodings)
         samples = np.concatenate((samples, emotion_samples))
-        for array in array_with_augmented_features:
-            X_mfcc.append(array)
 
-    input_features = [x for x in X_mfcc]
-    input_features = np.array(input_features)  # samples x n_features
-    enc = encoder()
+    return samples
 
-    actual_labels = enc.fit_transform(df[['label']])
-    #TODO: we have to check the labels are correct for noisy data
-    import scipy.sparse as sp
-    actual_labels = sp.vstack((actual_labels, actual_labels,actual_labels,actual_labels), format='csr')
 
-    if hasattr(actual_labels, "__len__") is False:
-        actual_labels = actual_labels.toarray()
-    data_split = (int)(samples_size * 0.0)
+def split_data(samples, test_percentage=0.3):
+    test_samples,train_samples = samples.split_sample(test_percentage)
 
-    X_test = input_features[data_split:]
-    y_test = actual_labels[data_split:]
-    X_train = X_test #input_features[data_split:]
-    y_train = y_test # actual_labels[data_split:]
-
-    return X_train, y_train, X_test, y_test,samples
+    return train_samples, test_samples
 
 
 def load_test_data(dataset_number_to_load=0):
     print("loading test data is called")
     paths, labels = loadTestSet(dataset_number_to_load)
-    return loadDataFromPathAndLabels(paths, labels)
+
+    return get_samples(paths, labels)
 
 
 def load_train_and_test_data_for_some_feelings(feelings):
     paths, labels = load_feeling(feelings)
-    return loadDataFromPathAndLabels(paths, labels)
+    return get_samples(paths, labels)
 
 
 def load_feel_test():

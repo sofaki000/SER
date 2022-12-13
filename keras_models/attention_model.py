@@ -1,6 +1,8 @@
+import  keras.optimizers as optim
+import tensorflow as tf
 import numpy as np
 from keras import Model
-from keras.layers import Reshape
+from keras.layers import Reshape, Dropout, Embedding, BatchNormalization
 from keras.callbacks import Callback
 from keras.layers import Layer, Lambda, Dot, Activation, Concatenate, LSTM
 import keras.backend as K
@@ -155,23 +157,75 @@ class attention(Layer):
         return context
 
 
-# Create a traditional RNN network
-def create_RNN(hidden_units, dense_units, input_shape, activation):
-    model = Sequential()
-    model.add(SimpleRNN(hidden_units, input_shape=input_shape, activation=activation[0]))
-    model.add(Dense(units=dense_units, activation=activation[1]))
-    model.compile(loss='mse', optimizer='adam',metrics='accuracy')
-    return model
+# # Create a traditional RNN network
+# def create_RNN(hidden_units, output_classes, input_shape, activation):
+#     # model = Sequential()
+#     # model.add(SimpleRNN(hidden_units, input_shape=input_shape, activation=activation[0]))
+#     # model.add(Dense(units=dense_units, activation=activation[1]))
+#     # model.compile(loss='mse', optimizer='adam',metrics='accuracy')
+#     # return model
+#     # x = Input(shape=input_shape)
+#     # RNN_layer = SimpleRNN(hidden_units, return_sequences=True, activation=activation)(x)
+#     # outputs = Dense(dense_units, trainable=True, activation='softmax')(RNN_layer)
+#     # model = Model(x, outputs)
+#     # model.compile(loss='categorical_crossentropy', optimizer='adam', metrics='accuracy')
+#     # return model
+#
+#     model = Sequential()
+#     # Add an Embedding layer expecting input vocab of size 1000, and output embedding dimension of size 64.
+#     model.add(SimpleRNN(128, input_shape=input_shape))
+#     # Add a Dense layer with 10 units.
+#     model.add(Dense(output_classes))
+#     model.compile(loss='categorical_crossentropy',
+#                   optimizer='adam',
+#                   metrics='accuracy')
+#     return model
 
 
-######## ADDING ATTENTION TO MODEL
-def create_RNN_with_attention(hidden_units, dense_units, input_shape, activation):
+
+def get_dense_model(num_of_output_classes,input_dim, lr=0.01):
+	model = Sequential()
+	model.add(Dense(128, input_dim=input_dim, activation='relu'))
+	model.add(BatchNormalization())
+	model.add(Dense(512, input_dim=input_dim, activation='relu'))
+	model.add(BatchNormalization())
+	model.add(Dense(512, input_dim=input_dim, activation='relu'))
+	model.add(BatchNormalization())
+	model.add(Dense(512, input_dim=input_dim, activation='relu'))
+	model.add(BatchNormalization())
+	model.add(Dense(512, input_dim=input_dim, activation='relu'))
+	model.add(BatchNormalization())
+	model.add(Dense(num_of_output_classes, activation='softmax'))
+
+	model.compile(loss='categorical_crossentropy',  optimizer='adam', metrics=['accuracy'])
+	return model
+
+
+def get_model_with_attention(num_of_output_classes,input_dim, lr=0.01):
+	model = Sequential()
+	model.add(Dense(128, input_dim=input_dim, activation='relu'))
+	model.add(BatchNormalization())
+	model.add(Dense(512, input_dim=input_dim, activation='relu'))
+	model.add(attention())
+	model.add(Dense(512, input_dim=input_dim, activation='relu'))
+	model.add(BatchNormalization())
+	model.add(Dense(512, input_dim=input_dim, activation='relu'))
+	model.add(BatchNormalization())
+	model.add(Dense(512, input_dim=input_dim, activation='relu'))
+	model.add(BatchNormalization())
+	model.add(Dense(num_of_output_classes, activation='softmax'))
+	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+	return model
+
+
+# ######## ADDING ATTENTION TO MODEL
+def create_RNN_with_attention_working(hidden_units, dense_units, input_shape, activation):
     x = Input(shape=input_shape)
     RNN_layer = SimpleRNN(hidden_units, return_sequences=True, activation=activation)(x)
     attention_layer = attention()(RNN_layer)
     outputs = Dense(dense_units, trainable=True, activation=activation)(attention_layer)
     model = Model(x, outputs)
-    model.compile(loss='mse', optimizer='adam',metrics='accuracy')
+    model.compile(loss='categorical_crossentropy', optimizer='adam',metrics='accuracy')
     return model
 
 
@@ -186,130 +240,118 @@ def create_model_with_additive_attention(input_shape, output_classes):
     return model
 
 
-from keras import backend as K, initializers, regularizers, constraints
+from sklearn import preprocessing
+from tensorflow.keras import backend as K
+from tensorflow.keras.layers import Dense, Lambda, Dot, Activation, Concatenate
+from keras.saving.save import load_model
+import numpy as np
+from keras import Model
+from keras.layers import Layer, Lambda, Dot, Activation, Concatenate, LSTM
+import keras.backend as K
+from keras.layers import Input, Dense
+from matplotlib import pyplot as plt
+import os
 
+debug_flag = int(os.environ.get('KERAS_ATTENTION_DEBUG', 0))
+class Attention(object if debug_flag else Layer):
 
-
-def dot_product(x, kernel):
-    """
-    Wrapper for dot product operation, in order to be compatible with both
-    Theano and Tensorflow
-    Args:
-        x (): input
-        kernel (): weights
-    Returns:
-    """
-    if K.backend() == 'tensorflow':
-        # todo: check that this is correct
-        return K.squeeze(K.dot(x, K.expand_dims(kernel)), axis=-1)
-    else:
-        return K.dot(x, kernel)
-
-
-class Attention(Layer):
-    def __init__(self,
-                 W_regularizer=None, b_regularizer=None,
-                 W_constraint=None, b_constraint=None, bias=True, return_attention=False, **kwargs):
-        """
-        Keras Layer that implements an Attention mechanism for temporal data.
-        Supports Masking.
-        Follows the work of Raffel et al. [https://arxiv.org/abs/1512.08756]
-        # Input shape
-            3D tensor with shape: `(samples, steps, features)`.
-        # Output shape
-            2D tensor with shape: `(samples, features)`.
-        :param kwargs:
-        Just put it on top of an RNN Layer (GRU/LSTM/SimpleRNN) with return_sequences=True.
-        The dimensions are inferred based on the output shape of the RNN.
-        Note: The layer has been tested with Keras 1.x
-        Example:
-
-            # 1
-            model.add(LSTM(64, return_sequences=True))
-            model.add(Attention())
-            # next add a Dense layer (for classification/regression) or whatever...
-            # 2 - Get the attention scores
-            hidden = LSTM(64, return_sequences=True)(words)
-            sentence, word_scores = Attention(return_attention=True)(hidden)
-        """
-        self.supports_masking = True
-        self.return_attention = return_attention
-        self.init = initializers.get('glorot_uniform')
-
-        self.W_regularizer = regularizers.get(W_regularizer)
-        self.b_regularizer = regularizers.get(b_regularizer)
-
-        self.W_constraint = constraints.get(W_constraint)
-        self.b_constraint = constraints.get(b_constraint)
-
-        self.bias = bias
+    def __init__(self, units=128, **kwargs):
         super(Attention, self).__init__(**kwargs)
+        self.units = units
 
+    # noinspection PyAttributeOutsideInit
     def build(self, input_shape):
-        assert len(input_shape) == 3
-
-        self.W = self.add_weight(shape=(input_shape[-1],),
-                                 initializer=self.init,
-                                 name='{}_W'.format(self.name),
-                                 regularizer=self.W_regularizer,
-                                 constraint=self.W_constraint)
-        if self.bias:
-            self.b = self.add_weight(shape=(input_shape[1],),
-                                     initializer='zero',
-                                     name='{}_b'.format(self.name),
-                                     regularizer=self.b_regularizer,
-                                     constraint=self.b_constraint)
-        else:
-            self.b = None
-
-        self.built = True
-
-    def compute_mask(self, input, input_mask=None):
-        # do not pass the mask to the next layers
-        return None
-
-    def call(self, x, mask=None):
-        eij = dot_product(x, self.W)
-
-        if self.bias:
-            eij += self.b
-
-        eij = K.tanh(eij)
-
-        a = K.exp(eij)
-
-        # apply mask after the exp. will be re-normalized next
-        if mask is not None:
-            # Cast the mask to floatX to avoid float64 upcasting in theano
-            a *= K.cast(mask, K.floatx())
-
-        # in some cases especially in the early stages of training the sum may be almost zero
-        # and this results in NaN's. A workaround is to add a very small positive number ε to the sum.
-        # a /= K.cast(K.sum(a, axis=1, keepdims=True), K.floatx())
-        a /= K.cast(K.sum(a, axis=1, keepdims=True) + K.epsilon(), K.floatx())
-
-        weighted_input = x * K.expand_dims(a)
-
-        result = K.sum(weighted_input, axis=1)
-
-        if self.return_attention:
-            return [result, a]
-        return result
+        input_dim = int(input_shape[-1])
+        with K.name_scope(self.name if not debug_flag else 'attention'):
+            self.attention_score_vec = Dense(input_dim, use_bias=False, name='attention_score_vec')
+            self.h_t = Lambda(lambda x: x[:, -1, :], output_shape=(input_dim,), name='last_hidden_state')
+            self.attention_score = Dot(axes=[1, 2], name='attention_score')
+            self.attention_weight = Activation('softmax', name='attention_weight')
+            self.context_vector = Dot(axes=[1, 1], name='context_vector')
+            self.attention_output = Concatenate(name='attention_output')
+            self.attention_vector = Dense(self.units, use_bias=False, activation='tanh', name='attention_vector')
+        if not debug_flag:
+            # debug: the call to build() is done in call().
+            super(Attention, self).build(input_shape)
 
     def compute_output_shape(self, input_shape):
-        if self.return_attention:
-            return [(input_shape[0], input_shape[-1]),  (input_shape[0], input_shape[1])]
+        return input_shape[0], self.units
+
+    def __call__(self, inputs, training=None, **kwargs):
+        if debug_flag:
+            return self.call(inputs, training, **kwargs)
         else:
-            return input_shape[0], input_shape[-1]
+            return super(Attention, self).__call__(inputs, training, **kwargs)
+
+    # noinspection PyUnusedLocal
+    def call(self, inputs, training=None, **kwargs):
+        """
+        Many-to-one attention mechanism for Keras.
+        @param inputs: 3D tensor with shape (batch_size, time_steps, input_dim).
+        @param training: not used in this layer.
+        @return: 2D tensor with shape (batch_size, units)
+        @author: felixhao28, philipperemy.
+        """
+        if debug_flag:
+            self.build(inputs.shape)
+        # Inside dense layer
+        #              hidden_states            dot               W            =>           score_first_part
+        # (batch_size, time_steps, hidden_size) dot (hidden_size, hidden_size) => (batch_size, time_steps, hidden_size)
+        # W is the trainable weight matrix of attention Luong's multiplicative style score
+        score_first_part = self.attention_score_vec(inputs)
+        #            score_first_part           dot        last_hidden_state     => attention_weights
+        # (batch_size, time_steps, hidden_size) dot   (batch_size, hidden_size)  => (batch_size, time_steps)
+        h_t = self.h_t(inputs)
+        score = self.attention_score([h_t, score_first_part])
+        attention_weights = self.attention_weight(score)
+        # (batch_size, time_steps, hidden_size) dot (batch_size, time_steps) => (batch_size, hidden_size)
+        context_vector = self.context_vector([inputs, attention_weights])
+        pre_activation = self.attention_output([context_vector, h_t])
+        attention_vector = self.attention_vector(pre_activation)
+        return attention_vector
+
+    def get_config(self):
+        """
+        Returns the config of a the layer. This is used for saving and loading from a model
+        :return: python dictionary with specs to rebuild layer
+        """
+        config = super(Attention, self).get_config()
+        config.update({'units': self.units})
+        return config
 
 
-import tensorflow as tf
-trainX, trainY, testX, testY = get_transformed_data(dataset_number_to_load=0)
-n_samples = trainX.shape[0]
-n_inputs = trainX.shape[1] # number of features
+#works ok
+def get_model_with_attention_v3(time_steps, input_dim):
+    model_input = Input(shape=(time_steps, input_dim))
+    x = LSTM(64, return_sequences=True, name="lstm")(model_input)
+    x = Attention(units=32)(x)
+    x = Reshape(target_shape=(1,32))(x)
+    x = LSTM(64, return_sequences=True, name="lstm_2")(x)
+    x = Attention(units=32)(x)
+    x = Dense(1)(x)
+    model = Model(model_input, x)
+    model.compile(loss='mae', optimizer='adam', metrics='accuracy')
+    return model
 
-hidden = LSTM(64, return_sequences=True)(tf.reshape(trainX, [1, 17, 40]))
-sentence, word_scores = Attention(return_attention=True)(hidden)
+#works ok
+def get_model_without_attention_v3(time_steps, input_dim):
+    model_input = Input(shape=(time_steps, input_dim))
+    x = LSTM(64, return_sequences=True, name="lstm")(model_input)
+    x = LSTM(64, return_sequences=True, name="lstm_2")(x)
+    x = Dense(1)(x)
+    model = Model(model_input, x)
+    model.compile(loss='mae', optimizer='adam', metrics='accuracy')
+    return model
 
-print(sentence)
-print(word_scores)
+
+def get_model_with_attention_v2(samples, time_steps, input_dim):
+    model_input = Input(shape=(samples,time_steps, input_dim))
+    model_input = Dense(64)(model_input)
+    reshaped_input = Reshape((-1, 40, 60))
+    # model_input = tf.reshape(model_input, [-1,])
+    x = LSTM(64, return_sequences=True, name="predictions")(reshaped_input)
+    x = Attention(units=32)(x)
+    x = Dense(5)(x)
+    model = Model(model_input, x)
+    model.compile(loss='mae', optimizer='adam')
+    return model

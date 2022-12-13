@@ -1,8 +1,8 @@
-import  keras.optimizers as optim
+import keras.optimizers as optim
 from keras import Sequential
 from keras.layers import Dense, Dropout
 from keras.layers import BatchNormalization
-from keras.utils import plot_model
+from keras.utils.vis_utils import plot_model
 
 
 def get_model(num_of_output_classes,input_dim, lr=0.01):
@@ -21,7 +21,7 @@ def get_model(num_of_output_classes,input_dim, lr=0.01):
 	optimizer = optim.Adam(learning_rate=lr)
 	model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 	# plot the model
-	plot_model(model, 'model.png', show_shapes=True)
+	#plot_model(model, 'model.png', show_shapes=True)
 	return model
 
 def get_trained_model(trainX, trainy, n_epochs,num_of_output_classes):

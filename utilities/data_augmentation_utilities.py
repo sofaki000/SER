@@ -1,9 +1,4 @@
-import librosa
 import numpy as np
-from IPython.lib.display import Audio
-from matplotlib import pyplot as plt
-import numpy as np # linear algebra
-import matplotlib.pyplot as plt
 import librosa
 import librosa.display
 import warnings

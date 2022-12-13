@@ -1,32 +1,17 @@
-from sklearn import preprocessing
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
-
-from data_utilities.data_handler import load_test_data
-import numpy as np
-
-from keras_models.Sample import Sample
+from data_utilities.data_handler import load_test_data, split_data
+from keras_models.Sample import  Samples
+from utilities.preprocessing_utilities import preprocess_all_samples
 
 
 def get_transformed_data(dataset_number_to_load=0):
-    X_train, y_train, X_test, y_test,samples = load_test_data(dataset_number_to_load) # load_feel_test()
-    # preprocessing
-    scaler = preprocessing.StandardScaler().fit(X_train)
-    scaler_test = preprocessing.StandardScaler().fit(X_test)
-    y_train =np.float32(y_train.toarray())
-    y_test =np.float32(y_test.toarray())
-    x_train = scaler.transform(X_train)
-    x_test = scaler_test.transform(X_test)
+    samples = Samples(load_test_data(dataset_number_to_load))
+    test_samples,train_samples = split_data(samples, test_percentage=0.3)
+    train_samples, test_samples = preprocess_all_samples(train_samples, test_samples)
+    return train_samples, test_samples
 
-    scaled_samples = []
-
-    for sample in samples:
-        old_features = sample.get_features()
-        name = sample.get_name()
-        scaled_sample= Sample(name= name, features=scaler.transform([old_features]))
-        scaled_samples.append(scaled_sample)
-    return x_train, y_train, x_test, y_test,scaled_samples
 
 
 def get_transformed_testing_data():
