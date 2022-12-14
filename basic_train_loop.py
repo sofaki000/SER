@@ -1,5 +1,5 @@
 from keras_models.models import get_model
-from utilities.data_utilities import get_transformed_data
+from data_utilities.data_utilities import get_transformed_data
 from utilities.plot_utilities import plot_validation_and_train_acc
 
 x_train, y_train, x_test, y_test = get_transformed_data()

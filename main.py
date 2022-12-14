@@ -1,4 +1,4 @@
-from utilities.data_utilities import get_transformed_data
+from data_utilities.data_utilities import get_transformed_data
 from utilities.evaluation_utilities import get_evaluation_scores_for_same_model_for_multiple_tries
 from methods.ensemble_method import do_ensemble_method_and_plot_test_accuracies
 from utilities.plot_utilities import plot_hist_and_distribution

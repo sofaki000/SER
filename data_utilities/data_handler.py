@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 
 import configuration
+from data_utilities.Sample import Samples
 from utilities.noise_utilities import augment_data_and_extract_mfcc
 import warnings
 import os
@@ -64,7 +65,7 @@ def loadTestSet(dataset_number_to_load=0):
             labels.append(label.lower())
         if len(paths) == 2:
             break
-    print('Dataset is Loaded')
+    print('Dataset is found. Loading data...')
     return paths, labels
 
 
@@ -78,9 +79,15 @@ def get_samples(paths, labels, encoder=OneHotEncoder):
     map_with_encodings = dict({"angry":encodings[0], "disgust":encodings[1], "fear":encodings[2], "happy":encodings[3], "neutral":encodings[4]})
 
     samples = []
+    i = 0
     for sample in df['speech']:
-        array_with_augmented_features, emotion_samples = augment_data_and_extract_mfcc(sample,map_with_encodings)
+        encoding = encodings[i]
+        emotion_samples = augment_data_and_extract_mfcc(sample,encoding)
         samples = np.concatenate((samples, emotion_samples))
+        i +=1
+
+        if i%20==0:
+            print(f'{i+1} samples loaded...')
 
     return samples
 
@@ -91,10 +98,15 @@ def split_data(samples, test_percentage=0.3):
     return train_samples, test_samples
 
 
+def suffle_data(samples):
+    samples_array = samples.get_samples_array()
+    import random
+    random.shuffle(samples_array)
+    return Samples(samples_array)
+
 def load_test_data(dataset_number_to_load=0):
     print("loading test data is called")
     paths, labels = loadTestSet(dataset_number_to_load)
-
     return get_samples(paths, labels)
 
 

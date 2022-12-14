@@ -1,10 +1,9 @@
-from keras.saving.save import load_model
 from vis.losses import ActivationMaximization
 from vis.regularizers import TotalVariation, LPNorm
 from vis.optimizer import Optimizer
 from vis.callbacks import GifGenerator
-from keras_models.attention_model import Attention, get_model_with_attention_v2
-from utilities.data_utilities import get_transformed_data
+from keras_models.attention_model import get_model_with_attention_v2
+from data_utilities.data_utilities import get_transformed_data
 import tensorflow as tf
 tf.compat.v1.disable_eager_execution()
 

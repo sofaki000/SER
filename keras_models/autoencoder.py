@@ -1,11 +1,10 @@
 from keras import Input, Model
-from keras.layers import Dense, LeakyReLU, BatchNormalization, Conv2D, Conv1D, MaxPooling1D, Conv1DTranspose, Flatten
-from keras.utils import plot_model
+from keras.layers import Dense, LeakyReLU, BatchNormalization, Conv1D, MaxPooling1D, Conv1DTranspose
 import tensorflow as tf
 
 import configuration
 import experiments_configuration.autoencoder_exp_config as autoencoder_config
-from utilities.data_utilities import get_transformed_data
+from data_utilities.data_utilities import get_transformed_data
 from utilities.plot_utilities import plot_validation_and_train_loss, plot_validation_and_train_acc
 from utilities.train_utilities import get_callbacks_for_training
 

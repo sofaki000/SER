@@ -1,18 +1,10 @@
-import  keras.optimizers as optim
-import tensorflow as tf
-import numpy as np
-from keras import Model
-from keras.layers import Reshape, Dropout, Embedding, BatchNormalization
+from keras.layers import Layer
+from keras.layers import Reshape,BatchNormalization
 from keras.callbacks import Callback
-from keras.layers import Layer, Lambda, Dot, Activation, Concatenate, LSTM
-import keras.backend as K
-from keras.layers import Input, Dense, SimpleRNN
+from keras.layers import SimpleRNN
 from keras.models import Sequential
 from keract import get_activations
-from matplotlib import pyplot as plt
 import os
-
-from utilities.data_utilities import get_transformed_data
 
 
 def create_argmax_mask(x):
@@ -320,28 +312,7 @@ class Attention(object if debug_flag else Layer):
         return config
 
 
-#works ok
-def get_model_with_attention_v3(time_steps, input_dim):
-    model_input = Input(shape=(time_steps, input_dim))
-    x = LSTM(64, return_sequences=True, name="lstm")(model_input)
-    x = Attention(units=32)(x)
-    x = Reshape(target_shape=(1,32))(x)
-    x = LSTM(64, return_sequences=True, name="lstm_2")(x)
-    x = Attention(units=32)(x)
-    x = Dense(1)(x)
-    model = Model(model_input, x)
-    model.compile(loss='mae', optimizer='adam', metrics='accuracy')
-    return model
 
-#works ok
-def get_model_without_attention_v3(time_steps, input_dim):
-    model_input = Input(shape=(time_steps, input_dim))
-    x = LSTM(64, return_sequences=True, name="lstm")(model_input)
-    x = LSTM(64, return_sequences=True, name="lstm_2")(x)
-    x = Dense(1)(x)
-    model = Model(model_input, x)
-    model.compile(loss='mae', optimizer='adam', metrics='accuracy')
-    return model
 
 
 def get_model_with_attention_v2(samples, time_steps, input_dim):

@@ -1,5 +1,5 @@
 from sklearn import preprocessing
-from keras_models.Sample import Sample, Samples
+from data_utilities.Sample import Sample, Samples
 
 
 def preprocess_samples(preprocessor, samples, is_test=False):

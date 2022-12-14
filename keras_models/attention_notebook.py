@@ -1,18 +1,9 @@
-import matplotlib.pyplot as plt
-from sklearn import preprocessing
-from tensorflow.keras import backend as K
-from tensorflow.keras.layers import Dense, Lambda, Dot, Activation, Concatenate
 from keras.saving.save import load_model
-import numpy as np
 from keras import Model
-from keras.layers import Layer, Lambda, Dot, Activation, Concatenate, LSTM
-import keras.backend as K
-from keras.layers import Input, Dense
 from matplotlib import pyplot as plt, cm
-import os
 import numpy as np
 from keras_models.attention_model import get_model_with_attention, Attention
-from utilities.data_utilities import get_transformed_data
+from data_utilities.data_utilities import get_transformed_data
 
 
 def plot3DHeatMap(x, y, z):
@@ -82,7 +73,6 @@ def main():
 
 
     # importing required libraries
-    from mpl_toolkits.mplot3d import Axes3D
     samples_x_axis = [i for i in range(20)]
     features_y_axis = []
     # plot3DHeatMap(lstm_weights[0], lstm_weights[0][:], lstm_weights[0][0][:])

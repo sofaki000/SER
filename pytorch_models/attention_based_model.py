@@ -1,26 +1,12 @@
-import librosa
-import librosa.display
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
-from matplotlib.backend_bases import RendererBase
 from scipy import signal
 from scipy.io import wavfile
-import os
-from PIL import Image
-from scipy.fftpack import fft
-import torch
-import torch.nn as nn
-import torch.optim as optim
-import torch.nn.functional as F
-from torch.utils import data
-import torchvision.datasets as datasets
-import torchvision.transforms as transforms
 from tensorboardX import SummaryWriter
 
 import os
 
-from utilities.data_utilities import get_transformed_data
+from data_utilities.data_utilities import get_transformed_data
 
 
 def file_search(dirname, ret, list_avoid_dir=[]):
@@ -105,8 +91,6 @@ def get_3d_spec(Sxx_in, moments=None):
     stacked = [arr.reshape((h, w, 1)) for arr in (base, delta, delta2)]
     return np.concatenate(stacked, axis=2)
 
-
-import pandas as pd
 
 no_rows=len(list_files)
 index=0
@@ -275,7 +259,6 @@ for name, param in modifiedAlexNet.named_parameters():
         print(name)
     else:
         print('no grad', name)
-import torch.optim as optim
 from transformers import AdamW
 criterion = nn.CrossEntropyLoss()
 optimizer = AdamW(modifiedAlexNet.parameters(), lr =  2e-4, eps = 1e-8 )

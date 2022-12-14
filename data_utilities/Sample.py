@@ -18,6 +18,8 @@ class Samples():
     def __init__(self, samples):
         # array with Sample
         self.samples = samples
+    def get_samples_array(self):
+        return self.samples
     def split_sample(self, split_percentage):
         data_split = int(len(self.samples)*split_percentage)
         return self.samples[data_split:], self.samples[:data_split]

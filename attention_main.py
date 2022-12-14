@@ -1,12 +1,8 @@
-from keras import Model
-from keras.saving.save import load_model
-from matplotlib import pyplot as plt
-
 import configuration
 from experiments_configuration import attention_exp_config
 from keras_models.attention_model import VisualizeAttentionMap, \
-    create_model_with_additive_attention, attention, get_dense_model, get_model_with_attention
-from utilities.data_utilities import get_transformed_data
+    get_dense_model, get_model_with_attention
+from data_utilities.data_utilities import get_transformed_data
 from utilities.plot_utilities import plot_validation_and_train_acc, plot_validation_and_train_loss
 from utilities.train_utilities import get_callbacks_for_training
 
