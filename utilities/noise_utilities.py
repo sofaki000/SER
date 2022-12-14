@@ -148,7 +148,7 @@ def pitch_audio(data,sr,e):
 
 emotion='angry'
 #path = "C:\\Users\\user\\Documents\\SpeechEmotionRecognition-ERGASIA-2022\\code\\SER\\data\\test\\OAF_back_angry.wav"
-path = "C:\\Users\\user\\Documents\\AVT_SER__ΞΟΞ΄ΞΉΞΊΞ±Ο‚_Ξ§ΟΟΟƒΞ±Ο‚\\SER_xrysas\\data\\test\\OAF_back_angry.wav"
+path = "C:\\Users\\user\\Documents\\AVT_SER__Κώδικας_Χρύσας\\SER_xrysas\\data\\test\\OAF_back_angry.wav"
 data, sampling_rate = librosa.load(path)
 #data, sampling_rate = librosa.load('OAF_back_angry.wav')
 create_waveplot(data, sampling_rate, emotion)
@@ -167,7 +167,7 @@ pitch_audio(data,sampling_rate,emotion)
 Audio(data,rate=sampling_rate)
 
 #emotion='disgust'
-#path = "C:\\Users\\user\\Documents\\AVT_SER__ΞΟΞ΄ΞΉΞΊΞ±Ο‚_Ξ§ΟΟΟƒΞ±Ο‚\\SER_xrysas\\data\\test\\OAF_back_disgust.wav"
+#path = "C:\\Users\\user\\Documents\\AVT_SER__Κώδικας_Χρύσας\\SER_xrysas\\data\\test\\OAF_back_disgust.wav"
 #data, sampling_rate = librosa.load(path)
 #create_waveplot(data, sampling_rate, emotion)
 #create_spectrogram(data, sampling_rate, emotion)
@@ -178,7 +178,7 @@ Audio(data,rate=sampling_rate)
 #display(Audio(path))
 
 #emotion='fear'
-#path = "C:\\Users\\user\\Documents\\AVT_SER__ΞΟΞ΄ΞΉΞΊΞ±Ο‚_Ξ§ΟΟΟƒΞ±Ο‚\\SER_xrysas\\data\\test\\OAF_back_fear.wav"
+#path = "C:\\Users\\user\\Documents\\AVT_SER__Κώδικας_Χρύσας\\SER_xrysas\\data\\test\\OAF_back_fear.wav"
 #data, sampling_rate = librosa.load(path)
 #create_waveplot(data, sampling_rate, emotion)
 #create_spectrogram(data, sampling_rate, emotion)
@@ -189,7 +189,7 @@ Audio(data,rate=sampling_rate)
 #display(Audio(path))
 
 #emotion='happy'
-#path = "C:\\Users\\user\\Documents\\AVT_SER__ΞΟΞ΄ΞΉΞΊΞ±Ο‚_Ξ§ΟΟΟƒΞ±Ο‚\\SER_xrysas\\data\\test\\OAF_back_happy.wav"
+#path = "C:\\Users\\user\\Documents\\AVT_SER__Κώδικας_Χρύσας\\SER_xrysas\\data\\test\\OAF_back_happy.wav"
 #data, sampling_rate = librosa.load(path)
 #create_waveplot(data, sampling_rate, emotion)
 #create_spectrogram(data, sampling_rate, emotion)
@@ -200,7 +200,7 @@ Audio(data,rate=sampling_rate)
 #display(Audio(path))
 
 #emotion='neutral'
-#path = "C:\\Users\\user\\Documents\\AVT_SER__ΞΟΞ΄ΞΉΞΊΞ±Ο‚_Ξ§ΟΟΟƒΞ±Ο‚\\SER_xrysas\\data\\test\\YAF_knock_neutral.wav"
+#path = "C:\\Users\\user\\Documents\\AVT_SER__Κώδικας_Χρύσας\\SER_xrysas\\data\\test\\YAF_knock_neutral.wav"
 #data, sampling_rate = librosa.load(path)
 #create_waveplot(data, sampling_rate, emotion)
 #create_spectrogram(data, sampling_rate, emotion)
