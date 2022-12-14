@@ -15,14 +15,12 @@ def get_gru_model(output_classes):
         Dropout(0.2),
         Dense(output_classes, activation='softmax')
     ])
-
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     return model
 
 #123,32, 64,32
 # 256,512,512-> better train, worse test
 def get_gru_model_with_attention(output_classes):
-
     model = Sequential([
         GRU(126, return_sequences=True, input_shape=(40, 1)),
         Attention(units=32),

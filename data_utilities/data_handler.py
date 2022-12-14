@@ -1,10 +1,12 @@
+import librosa
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 
 import configuration
 from data_utilities.Sample import Samples
-from utilities.noise_utilities import augment_data_and_extract_mfcc
+from data_utilities.all_datasets import get_dataframe_with_all_datasets
+from utilities.noise_utilities import get_sample_from_file, augment_data
 import warnings
 import os
 warnings.filterwarnings('ignore')
@@ -71,19 +73,24 @@ def loadTestSet(dataset_number_to_load=0):
 
 def get_samples(paths, labels, encoder=OneHotEncoder):
     df = pd.DataFrame()
-    df['speech'] = paths
-    df['label'] = labels
+
+    df_all = get_dataframe_with_all_datasets()
+    df['speech'] = df_all['Path'] #paths
+    df['label'] = df_all['Emotions'] #labels
     enc = encoder()
     encodings = enc.fit_transform(df[['label']]).toarray()
 
-    map_with_encodings = dict({"angry":encodings[0], "disgust":encodings[1], "fear":encodings[2], "happy":encodings[3], "neutral":encodings[4]})
-
     samples = []
     i = 0
-    for sample in df['speech']:
+    for filename_for_sample in df['speech']:
+        data, sampling_rate = librosa.load(filename_for_sample, duration=3, offset=0.5)
+
+        data, pitched_data, streched_data, noisy_data = augment_data(filename_for_sample)
+
         encoding = encodings[i]
-        emotion_samples = augment_data_and_extract_mfcc(sample,encoding)
-        samples = np.concatenate((samples, emotion_samples))
+        emotion_sample = get_sample_from_file(filename_for_sample, data, sampling_rate, encoding)
+
+        samples.append(emotion_sample)
         i +=1
 
         if i%20==0:

@@ -11,6 +11,7 @@ def get_transformed_data(dataset_number_to_load=0):
     samples = Samples(load_test_data(dataset_number_to_load))
     samples = suffle_data(samples)
     test_samples,train_samples = split_data(samples, test_percentage=0.3)
+
     train_samples, test_samples = preprocess_all_samples(train_samples, test_samples)
 
     trainX = train_samples.get_features()

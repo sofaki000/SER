@@ -11,16 +11,19 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 def get_dataframe_with_all_datasets():
     #paths for my data
-    Ravdess = "C:\\Users\\user\\PycharmProjects\\SER_4_datasets\\audio_speech_actors_01-24\\"
-    Crema = "C:\\Users\\user\\PycharmProjects\\SER_4_datasets\\AudioWAV\\"
-    Tess = "C:\\Users\\user\\PycharmProjects\\SER_4_datasets\\TESS_Toronto_emotional_speech_set_data\\"
-    Savee = "C:\\Users\\user\\PycharmProjects\\SER_4_datasets\\AudioData\\"
+    Ravdess = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\sav\\audio_speech_actors_01-24\\"
+    Crema = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\AudioWAV\\"
+    Tess = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\TESS Toronto emotional speech set data\\"
+    Savee = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\AudioData\\"
 
     #data preparation - RAVDESS
     ravdess_directory_list = os.listdir(Ravdess)
 
     file_emotion = []
     file_path = []
+
+    counter1 =0
+
     for dir in ravdess_directory_list:
         # as their are 20 different actors in our previous directory we need to extract files for each actor.
         actor = os.listdir(Ravdess + dir)
@@ -30,6 +33,11 @@ def get_dataframe_with_all_datasets():
             # third part in each file represents the emotion associated to that file.
             file_emotion.append(int(part[2]))
             file_path.append(Ravdess + dir + '/' + file)
+
+            counter1+=1
+
+            if counter1==3:
+                break
     # dataframe for emotion of files
     emotion_df = pd.DataFrame(file_emotion, columns=['Emotions'])
 
@@ -46,6 +54,8 @@ def get_dataframe_with_all_datasets():
 
     file_emotion = []
     file_path = []
+
+    counter2 = 0
 
     for file in crema_directory_list:
         # storing file paths
@@ -67,6 +77,9 @@ def get_dataframe_with_all_datasets():
         else:
             file_emotion.append('Unknown')
 
+        if counter2==4:
+            break
+
         # dataframe for emotion of files
         emotion_df = pd.DataFrame(file_emotion, columns=['Emotions'])
 
@@ -81,6 +94,7 @@ def get_dataframe_with_all_datasets():
     file_emotion = []
     file_path = []
 
+    counter3=0
     for dir in tess_directory_list:
         directories = os.listdir(Tess + dir)
         for file in directories:
@@ -91,7 +105,9 @@ def get_dataframe_with_all_datasets():
             else:
                 file_emotion.append(part)
             file_path.append(Tess + dir + '\\' + file)
-
+            counter3 +=1
+            if counter3==4:
+                break
     # dataframe for emotion of files
     emotion_df = pd.DataFrame(file_emotion, columns=['Emotions'])
 
@@ -107,6 +123,7 @@ def get_dataframe_with_all_datasets():
     file_emotion = []
     file_path = []
 
+    counter4=0
     for file in savee_directory_list:
         file_path.append(Savee + file)
         part = file.split('_')[0]
@@ -125,6 +142,10 @@ def get_dataframe_with_all_datasets():
             file_emotion.append('sad')
         else:
             file_emotion.append('surprise')
+        counter4+=1
+
+        if counter4==4:
+            break
 
         # dataframe for emotion of files
         emotion_df = pd.DataFrame(file_emotion, columns=['Emotions'])
@@ -138,6 +159,8 @@ def get_dataframe_with_all_datasets():
     data_path = pd.concat([Ravdess_df, Crema_df, Tess_df, Savee_df], axis = 0)
     data_path.to_csv("data_path.csv",index=False)
     data_path.head()
+    return data_path
+
 
 #data_path = pd.concat([Tess_df], axis = 0)
 # Tess_df.to_csv("Tess_df.csv",index=False)
@@ -148,7 +171,7 @@ def get_dataframe_with_all_datasets():
 #     em.append(i)
 # print(em)
 
-def plot_emotion_dist():
+def plot_emotion_dist(data_path):
     #emotions distribution in dataset
     plt.title('Count of Emotions', size=16)
     sns.histplot(data_path.Emotions)

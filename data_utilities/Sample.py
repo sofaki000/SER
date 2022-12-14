@@ -11,7 +11,7 @@ class Sample():
     def get_encoding(self):
         return self.encoding
     def get_features(self):
-        return self.features
+        return self.features.reshape(122)
 
 
 class Samples():
@@ -27,20 +27,17 @@ class Samples():
         labels = []
         for sample in self.samples:
             labels.append(sample.get_name())
-
         return labels
-
     def get_encoded_labels(self):
         encodings = []
         for sample in self.samples:
             encodings.append(sample.get_encoding())
 
         return encodings
-
     def get_features(self):
         features = []
         for sample in self.samples:
-            features.append(sample.get_features())
+            features.append(sample.get_features().reshape(122))
 
         return features
     def get_size(self):
@@ -48,6 +45,7 @@ class Samples():
     # to make class iterable:
     def __iter__(self):
         return SampleIterator(self.samples)
+
 
 class SampleIterator:
    ''' Iterator class '''

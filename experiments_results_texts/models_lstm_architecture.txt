@@ -157,13 +157,31 @@ Train: Loss:0.51, acc:0.80
 Test: Loss:0.48, acc:0.80
 Train: Loss:0.54, acc:0.79
 Test: Loss:0.50, acc:0.80
+
 gru_whole_ds_less_neurons
 Train: Loss:0.52, acc:0.80
 Test: Loss:0.56, acc:0.79
 Train: Loss:0.49, acc:0.81
 Test: Loss:0.53, acc:0.80
+
 lstm_256_256_512_512neurons
+without attention:
 Train: Loss:0.49, acc:0.81
 Test: Loss:0.54, acc:0.78
+with attention:
 Train: Loss:0.50, acc:0.80
 Test: Loss:0.55, acc:0.78
+lstm_256_256_512_512neurons
+lstm_256_256_512_512neurons
+
+Train: Loss:1.32, acc:0.50
+Test: Loss:2.48, acc:0.00
+Train: Loss:2.48, acc:0.50
+Test: Loss:10.50, acc:0.00
+lstm_256_256_512_512neurons
+
+lstm_256_256_512_512neurons
+Train: Loss:0.33, acc:0.88
+Test: Loss:0.33, acc:0.87
+Train: Loss:0.24, acc:0.92
+Test: Loss:0.30, acc:0.89

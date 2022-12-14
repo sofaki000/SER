@@ -9,7 +9,7 @@ trainX, trainY, testX, testY = get_transformed_data(dataset_number_to_load=4)
 output_classes = 7
 n_samples = len(trainX)
 n_test_samples = len(testX)
-n_features = 40
+n_features = 122
 trainX = trainX.reshape(n_samples,n_features,1) # we reshape so it is lstm friendly
 testX = testX.reshape(n_test_samples,n_features,1)
 
@@ -21,8 +21,8 @@ f.write(f'{experiment_name}\n')
 # lstm_model = get_gru_model(output_classes=output_classes)
 # lstm_model_with_attention = get_gru_model_with_attention(output_classes=output_classes)
 
-lstm_model_with_attention = get_lstm_model_with_dropout_and_attention(output_classes=output_classes)
-lstm_model = get_lstm_model_with_dropout(output_classes=output_classes)
+lstm_model_with_attention = get_lstm_model_with_dropout_and_attention(num_features=n_features, output_classes=output_classes)
+lstm_model = get_lstm_model_with_dropout(num_features=n_features, output_classes=output_classes)
 # lstm layer expects input in shape: samples, time series, features
 
 #lstm_model = get_lstm_model_with_attention(time_steps=1, input_dim=40)

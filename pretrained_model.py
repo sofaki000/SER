@@ -14,7 +14,6 @@ n_features = 40
 trainX = trainX.reshape(n_samples,n_features,1) # we reshape so it is lstm friendly
 testX = testX.reshape(n_test_samples,n_features,1)
 
-
 ##################### without attention
 #lstm_model = get_lstm_model(time_steps=1, input_dim=40)
 # lstm_model = get_gru_model(output_classes=output_classes)
