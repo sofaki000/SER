@@ -82,7 +82,12 @@ def loadDataFromPathAndLabels(paths, labels, encoder=OneHotEncoder ):
     actual_labels = enc.fit_transform(df[['label']])
     #TODO: we have to check the labels are correct for noisy data- den einai, thelei allagh
     import scipy.sparse as sp
-    actual_labels = sp.vstack((actual_labels, actual_labels, actual_labels, actual_labels), format='csr')
+
+    #Represent the actual labels correctly - maybe create new dataframe better
+
+    # for i in range(0, 5):
+    #     for j in range(0, actual_labels[0].shape[1]):
+    # actual_labels = sp.vstack((actual_labels, actual_labels, actual_labels, actual_labels), format='csr')
 #exoume 112 features
     if hasattr(actual_labels, "__len__") is False:
         actual_labels = actual_labels.toarray()
