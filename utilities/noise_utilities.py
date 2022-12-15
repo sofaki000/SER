@@ -30,7 +30,7 @@ def augment_data(filename):
     stretched_data = stretch(data)
     noisy_data = add_noise(data)
 
-    return data,pitched_data, stretched_data, noisy_data
+    return data,pitched_data, stretched_data, noisy_data,sampling_rate
 
 
 def show_wave(data, sr, emotion):
@@ -69,13 +69,8 @@ def get_spectral_centroid(data):
     sc = librosa.feature.spectral_centroid(S=S)
     return sc
 
-def get_sample_from_file(filename_for_sample, data, sampling_rate, encoding):
+def get_sample_from_file(label, data, sampling_rate, encoding):
     features_for_sample = get_features_for_sample(data, sampling_rate)
-
-    if "\\" in filename_for_sample:
-        filename = filename_for_sample.split("\\")[-1]
-
-    label = filename.split("_")[2].split('.')[0]
 
     return Sample(features=features_for_sample, name=label, encoding=encoding)
 

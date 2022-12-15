@@ -10,7 +10,18 @@ def add_noise(data):
     return data
 
 def stretch(data, rate=0.8):
-    return librosa.effects.time_stretch(data, rate)
+    #returns a smaller array - must transform to return an array with the same size
+    #as the other data augmentation processes
+    stretched_data = librosa.effects.time_stretch(data, rate)
+    if len(stretched_data) < len(data):
+        zeros_appended_size = len(data) - len(stretched_data)
+        zeros_appended = np.zeros(zeros_appended_size)
+        stretched_data = np.concatenate((stretched_data, zeros_appended))
+
+    elif len(stretched_data) > len(data):
+        stretched_data = stretched_data[0:len(data)]
+
+    return stretched_data
 
 def shift(data):
     shift_range = int(np.random.uniform(low=-5, high = 5)*1000)

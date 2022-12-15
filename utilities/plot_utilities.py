@@ -1,6 +1,8 @@
+import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-from data_utilities.data_handler import load_test_data
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
+
 import seaborn as sns
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
@@ -132,6 +134,19 @@ def plot_sensitivity_analysis_on_number_of_ensemble_members(n_members, scores, f
     plt.plot(x_axis, scores)
     fig.savefig(file_name)
 
+
+def plot_confusion_matrix(model1, x_test, y_test):
+    # confusion matrix
+    # model1 = get_trained_model(x_train, y_train, n_epochs, 5)
+    # model1.fit(x_train, y_train)
+
+    y_pred = model1.predict(x_test)
+    y_pred = np.argmax(y_pred, axis=1)
+    y_test = np.argmax(y_test, axis=1)
+    cm = confusion_matrix(y_test, y_pred)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp.plot()
+    plt.show()
 
 
 

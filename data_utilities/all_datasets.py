@@ -9,12 +9,21 @@ if not sys.warnoptions:
     warnings.simplefilter("ignore")
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-def get_dataframe_with_all_datasets():
-    #paths for my data
-    Ravdess = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\sav\\audio_speech_actors_01-24\\"
-    Crema = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\AudioWAV\\"
-    Tess = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\TESS Toronto emotional speech set data\\"
-    Savee = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\AudioData\\"
+Ravdess = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\sav\\audio_speech_actors_01-24\\"
+Crema = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\AudioWAV\\"
+Tess = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\TESS Toronto emotional speech set data\\TESS Toronto emotional speech set data\\"
+Savee = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\AudioData\\"
+
+
+
+
+def get_dataframe_with_all_datasets(number_of_samples_to_load=20):
+    load_all_data = False
+    if number_of_samples_to_load==-1:
+        load_all_data = True
+        number_of_samples_to_load_per_ds = 0
+    else:
+        number_of_samples_to_load_per_ds= int(number_of_samples_to_load/4)
 
     #data preparation - RAVDESS
     ravdess_directory_list = os.listdir(Ravdess)
@@ -36,8 +45,10 @@ def get_dataframe_with_all_datasets():
 
             counter1+=1
 
-            if counter1==3:
+            if load_all_data is False and counter1==number_of_samples_to_load_per_ds:
                 break
+        if  load_all_data is False and counter1 == number_of_samples_to_load_per_ds:
+            break
     # dataframe for emotion of files
     emotion_df = pd.DataFrame(file_emotion, columns=['Emotions'])
 
@@ -77,12 +88,13 @@ def get_dataframe_with_all_datasets():
         else:
             file_emotion.append('Unknown')
 
-        if counter2==4:
+        if  load_all_data is False and counter2==number_of_samples_to_load_per_ds:
             break
 
         # dataframe for emotion of files
         emotion_df = pd.DataFrame(file_emotion, columns=['Emotions'])
 
+        counter2+=1
         # dataframe for path of files.
         path_df = pd.DataFrame(file_path, columns=['Path'])
         Crema_df = pd.concat([emotion_df, path_df], axis=1)
@@ -106,8 +118,10 @@ def get_dataframe_with_all_datasets():
                 file_emotion.append(part)
             file_path.append(Tess + dir + '\\' + file)
             counter3 +=1
-            if counter3==4:
+            if load_all_data is False and counter3 == number_of_samples_to_load_per_ds:
                 break
+        if  load_all_data is False and counter3 == number_of_samples_to_load_per_ds:
+            break
     # dataframe for emotion of files
     emotion_df = pd.DataFrame(file_emotion, columns=['Emotions'])
 
@@ -118,42 +132,47 @@ def get_dataframe_with_all_datasets():
     Tess_df.head()
 
     #data preparation - SAVEE
-    savee_directory_list = os.listdir(Savee)
-
     file_emotion = []
     file_path = []
 
     counter4=0
-    for file in savee_directory_list:
-        file_path.append(Savee + file)
-        part = file.split('_')[0]
-        ele = part[:-6]
-        if ele=='a':
-            file_emotion.append('angry')
-        elif ele=='d':
-            file_emotion.append('disgust')
-        elif ele=='f':
-            file_emotion.append('fear')
-        elif ele=='h':
-            file_emotion.append('happy')
-        elif ele == 'n':
-            file_emotion.append('neutral')
-        elif ele == 'sa':
-            file_emotion.append('sad')
-        else:
-            file_emotion.append('surprise')
-        counter4+=1
+    for dirname, _, filenames in os.walk(Savee):
+        for filename in filenames:
+            file_name = os.path.join(dirname, filename)
 
-        if counter4==4:
+            if file_name.endswith(".wav") is False:
+                continue
+
+            file_path.append( file_name)
+
+            label = filename[::-1].split('_')[0][::-1]
+
+            if label[:1] == 'a':
+                file_emotion.append('angry')
+            elif label[:1] == 'd':
+                file_emotion.append('disgust')
+            elif label[:1] == 'f':
+                file_emotion.append('fear')
+            elif label[:1] == 'h':
+                file_emotion.append('happy')
+            elif label[:1] == 'n':
+                file_emotion.append('neutral')
+            elif label[:1] == 's':
+                if label[:2] == 'sa':
+                    file_emotion.append('sad')
+                else:
+                    file_emotion.append('surprise')
+            counter4 +=1
+            if  load_all_data is False and counter4==number_of_samples_to_load_per_ds:
+                break
+        if  load_all_data is False and counter4 == number_of_samples_to_load_per_ds:
             break
 
-        # dataframe for emotion of files
-        emotion_df = pd.DataFrame(file_emotion, columns=['Emotions'])
+    emotion_df = pd.DataFrame(file_emotion, columns=['Emotions'])
+    path_df = pd.DataFrame(file_path, columns=['Path'])
 
-        # dataframe for path of files.
-        path_df = pd.DataFrame(file_path, columns=['Path'])
-        Savee_df = pd.concat([emotion_df, path_df], axis=1)
-        Savee_df.head()
+    Savee_df = pd.concat([emotion_df, path_df], axis=1)
+    Savee_df.head()
 
     # creating Dataframe using all the 4 dataframes we created so far.
     data_path = pd.concat([Ravdess_df, Crema_df, Tess_df, Savee_df], axis = 0)

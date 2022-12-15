@@ -1,20 +1,20 @@
 import configuration
-from keras_models.gru_models import get_gru_model_with_attention, get_gru_model
 from data_utilities.data_utilities import get_transformed_data
 from keras_models.lstm_models import get_lstm_model_with_dropout_and_attention, get_lstm_model_with_dropout
 from utilities.plot_utilities import plot_validation_and_train_acc_2_models
 from utilities.train_utilities import train_model_and_save_results
 
-trainX, trainY, testX, testY = get_transformed_data(dataset_number_to_load=4)
+trainX, trainY, testX, testY = get_transformed_data(number_of_samples_to_load=-1)
 output_classes = 7
 n_samples = len(trainX)
 n_test_samples = len(testX)
 n_features = 122
+
 trainX = trainX.reshape(n_samples,n_features,1) # we reshape so it is lstm friendly
 testX = testX.reshape(n_test_samples,n_features,1)
 
 f = open(f"{configuration.models_experiments_results_text_path}\\models_lstm_architecture.txt", "a")
-experiment_name = "lstm_256_256_512_512neurons"
+experiment_name = "all_ds"
 f.write(f'{experiment_name}\n')
 
 ##################### without attention

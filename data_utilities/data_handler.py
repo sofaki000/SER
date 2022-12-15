@@ -71,32 +71,30 @@ def loadTestSet(dataset_number_to_load=0):
     return paths, labels
 
 
-def get_samples(paths, labels, encoder=OneHotEncoder):
-    df = pd.DataFrame()
+def get_samples(number_of_samples_to_load=20, encoder=OneHotEncoder):
+    df_all = get_dataframe_with_all_datasets(number_of_samples_to_load)
 
-    df_all = get_dataframe_with_all_datasets()
-    df['speech'] = df_all['Path'] #paths
-    df['label'] = df_all['Emotions'] #labels
     enc = encoder()
-    encodings = enc.fit_transform(df[['label']]).toarray()
+    encodings = enc.fit_transform(df_all[['Emotions']]).toarray()
 
     samples = []
-    i = 0
-    for filename_for_sample in df['speech']:
-        data, sampling_rate = librosa.load(filename_for_sample, duration=3, offset=0.5)
 
-        data, pitched_data, streched_data, noisy_data = augment_data(filename_for_sample)
+    for i in range(df_all['Emotions'].size):
+
+        filename_for_sample = df_all['Path'].iloc[i]
+        label = df_all['Emotions'].iloc[i]
+
+        data, pitched_data,streched_data, noisy_data,sampling_rate = augment_data(filename_for_sample)
 
         encoding = encodings[i]
-        emotion_sample = get_sample_from_file(filename_for_sample, data, sampling_rate, encoding)
+        emotion_sample = get_sample_from_file(label, data, sampling_rate, encoding)
 
         samples.append(emotion_sample)
-        i +=1
 
         if i%20==0:
             print(f'{i+1} samples loaded...')
 
-    return samples
+    return Samples(samples)
 
 
 def split_data(samples, test_percentage=0.3):
@@ -111,10 +109,7 @@ def suffle_data(samples):
     random.shuffle(samples_array)
     return Samples(samples_array)
 
-def load_test_data(dataset_number_to_load=0):
-    print("loading test data is called")
-    paths, labels = loadTestSet(dataset_number_to_load)
-    return get_samples(paths, labels)
+
 
 
 def load_train_and_test_data_for_some_feelings(feelings):
