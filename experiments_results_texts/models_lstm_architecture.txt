@@ -212,3 +212,24 @@ Train: Loss:0.68, acc:0.75
 Test: Loss:0.80, acc:0.71
 Train: Loss:0.87, acc:0.74
 Test: Loss:1.03, acc:0.71
+
+
+_tess_ravdess_lstm_and_gru
+
+lstm
+without att
+Train: Loss:0.68, acc:0.75
+Test: Loss:0.77, acc:0.72
+with att
+Train: Loss:0.63, acc:0.79
+Test: Loss:0.73, acc:0.75
+
+gru:
+with att
+Train: Loss:0.67, acc:0.76
+Test: Loss:0.77, acc:0.75
+without att
+Train: Loss:0.70, acc:0.74
+Test: Loss:0.82, acc:0.72
+
+_tess_crema_lstm_and_gru

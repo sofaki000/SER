@@ -11,6 +11,7 @@ from utilities.train_utilities import get_callbacks_for_training
 f = open(f"{configuration.experiments_results_text_path}/test_results_for_autoencoder.txt", "a")
 
 f.write("------------ new experiment----------------\n")
+f.write("crema and tess")
 
 def get_cnn_autoencoder(n_inputs):
     input = Input(shape=(n_inputs,))

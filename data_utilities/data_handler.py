@@ -5,7 +5,7 @@ from sklearn.preprocessing import OneHotEncoder
 
 import configuration
 from data_utilities.Sample import Samples
-from data_utilities.all_datasets import get_dataframe_with_all_datasets
+from data_utilities.all_datasets import get_dataframe_with_all_datasets, get_dataframe_with_one_dataset
 from utilities.noise_utilities import get_sample_from_file, augment_data
 import warnings
 import os
@@ -71,8 +71,11 @@ def loadTestSet(dataset_number_to_load=0):
     return paths, labels
 
 
-def get_samples(number_of_samples_to_load=20, encoder=OneHotEncoder):
-    df_all = get_dataframe_with_all_datasets(number_of_samples_to_load)
+def get_samples(number_of_samples_to_load=20, encoder=OneHotEncoder, one_dataset=False):
+    if one_dataset:
+        df_all = get_dataframe_with_one_dataset(number_of_samples_to_load)
+    else:
+        df_all = get_dataframe_with_all_datasets(number_of_samples_to_load)
 
     enc = encoder()
     encodings = enc.fit_transform(df_all[['Emotions']]).toarray()

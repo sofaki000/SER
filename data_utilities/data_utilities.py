@@ -1,14 +1,14 @@
 import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 from data_utilities.data_handler import split_data, suffle_data, get_samples
 from utilities.preprocessing_utilities import preprocess_all_samples
 
 
-def get_transformed_data(number_of_samples_to_load=20):
+def get_transformed_data(number_of_samples_to_load=20, one_dataset=False):
     # we get the samples from filesystem
-    samples = get_samples(number_of_samples_to_load)
+    samples = get_samples(number_of_samples_to_load, encoder=OneHotEncoder, one_dataset=one_dataset)
 
     # we shuffle the samples
     samples = suffle_data(samples)

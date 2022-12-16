@@ -6,7 +6,7 @@ from utilities.plot_utilities import plot_validation_and_train_acc_2_models
 from utilities.train_utilities import train_model_and_save_results
 
 trainX, trainY, testX, testY = get_transformed_data(number_of_samples_to_load=-1)
-output_classes = 8
+output_classes = 7
 n_samples = len(trainX)
 n_test_samples = len(testX)
 n_features = 122
@@ -15,7 +15,7 @@ trainX = trainX.reshape(n_samples,n_features,1) # we reshape so it is lstm frien
 testX = testX.reshape(n_test_samples,n_features,1)
 
 f = open(f"{configuration.models_experiments_results_text_path}\\models_lstm_architecture.txt", "a")
-experiment_name = "_tess_ravdess_lstm_and_gru"
+experiment_name = "_tess_crema_lstm_and_gru"
 f.write(f'{experiment_name}\n')
 
 ##################### without attention

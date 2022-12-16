@@ -176,21 +176,41 @@ def get_dataframe_with_all_datasets(number_of_samples_to_load=20):
         load_all_data = True
         number_of_samples_to_load_per_ds = 0
     else:
-        number_of_samples_to_load_per_ds= int(number_of_samples_to_load/4)
+        number_of_samples_to_load_per_ds= int(number_of_samples_to_load/2)
 
-    Ravdess_df = load_ravdess_dataset(load_all_data, number_of_samples_to_load_per_ds)
-    #Crema_df = load_crema_dataset(load_all_data, number_of_samples_to_load_per_ds)
+    #Ravdess_df = load_ravdess_dataset(load_all_data, number_of_samples_to_load_per_ds)
+    Crema_df = load_crema_dataset(load_all_data, number_of_samples_to_load_per_ds)
     Tess_df = load_tess_dataset(load_all_data, number_of_samples_to_load_per_ds)
     #Savee_df = get_savee_dataset(load_all_data, number_of_samples_to_load_per_ds)
 
 
     # creating Dataframe using all the 4 dataframes we created so far.
     # data_path = pd.concat([Ravdess_df, Crema_df, Tess_df, Savee_df], axis = 0)
-    data_path = pd.concat([Ravdess_df, Tess_df], axis=0)
+    data_path = pd.concat([Crema_df, Tess_df], axis=0)
     data_path.to_csv("data_path.csv",index=False)
     data_path.head()
     return data_path
 
+def get_dataframe_with_one_dataset(number_of_samples_to_load=20):
+    load_all_data = False
+    if number_of_samples_to_load==-1:
+        load_all_data = True
+        number_of_samples_to_load_per_ds = 0
+    else:
+        number_of_samples_to_load_per_ds= int(number_of_samples_to_load/2)
+
+    # Ravdess_df = load_ravdess_dataset(load_all_data, number_of_samples_to_load_per_ds)
+    # Crema_df = load_crema_dataset(load_all_data, number_of_samples_to_load_per_ds)
+    Tess_df = load_tess_dataset(load_all_data, number_of_samples_to_load_per_ds)
+    # Savee_df = get_savee_dataset(load_all_data, number_of_samples_to_load_per_ds)
+
+
+    # creating Dataframe using all the 4 dataframes we created so far.
+    # data_path = pd.concat([Ravdess_df, Crema_df, Tess_df, Savee_df], axis = 0)
+    data_path = pd.concat([Tess_df], axis=0)
+    data_path.to_csv("data_path.csv",index=False)
+    data_path.head()
+    return data_path
 
 #data_path = pd.concat([Tess_df], axis = 0)
 # Tess_df.to_csv("Tess_df.csv",index=False)

@@ -1,3 +1,4 @@
+from keras.layers.reshaping.reshape import Reshape
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, GRU
 
@@ -27,6 +28,23 @@ def get_gru_model_with_attention(num_features,output_classes):
         Dense(64, activation='relu'),
         Dropout(0.2),
         Dense(32, activation='relu'),
+        Dropout(0.2),
+        Dense(output_classes, activation='softmax')
+    ])
+
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return model
+
+def get_gru_model_with_more_attention_layers(num_features, output_classes):
+    model = Sequential([
+        GRU(126, return_sequences=True, input_shape=(num_features, 1)),
+        Attention(units=32),
+        Reshape(),
+        GRU(126, return_sequences=True, input_shape=(num_features, 1)),
+        Attention(units=32),
+        Dropout(0.2),
+        Dense(32, activation='relu'),
+        Attention(units=32),
         Dropout(0.2),
         Dense(output_classes, activation='softmax')
     ])

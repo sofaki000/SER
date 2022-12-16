@@ -44,6 +44,20 @@ def get_lstm_model_with_dropout_and_attention(num_features, output_classes):
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     return model
 
+def get_lstm_model_with_dropout_and_more_attention_layers(num_features, output_classes):
+    model = Sequential([
+        LSTM(256, return_sequences=True, input_shape=(num_features,1)),
+        Attention(units=256),
+        Dropout(0.2),
+        Dense(512, activation='relu'),
+        Dropout(0.2),
+        Dense(512, activation='relu'),
+        Dropout(0.2),
+        Dense(output_classes, activation='softmax')
+    ])
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return model
+
 #256,128,64
 # 256 512 512
 def get_lstm_model_with_dropout(num_features,output_classes):
