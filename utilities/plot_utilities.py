@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+from sklearn.decomposition import PCA
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 
 import seaborn as sns
@@ -164,7 +165,7 @@ def plot_PCA(X):
     plt.xlabel('Number of components')
     plt.ylabel('Cumulative explained variance')
     plt.show()
-    
+
 # Create scaler
 # scaler = StandardScaler()
 # train_samples = Samples(load_test_data(dataset_number_to_load=4))
