@@ -24,10 +24,12 @@ def train_model_and_save_results(model, accuracy_file_name_model,
     print(content_train)
     print(content_test)
 
+    accuracies_content = f'test acc:{test_acc:.2f}, train acc:{train_acc:.2f}'
+
     epoch_stopped = training_callbacks[0].stopped_epoch
 
     plot_validation_and_train_acc(file_name=accuracy_file_name_model,
-                                  title=f"Accuracy, epoch stopped:{epoch_stopped}",
+                                  title=f"Accuracy, epoch stopped:{epoch_stopped},{accuracies_content}",
                                   history=history)
 
     plot_validation_and_train_loss(file_name=loss_file_name_model,

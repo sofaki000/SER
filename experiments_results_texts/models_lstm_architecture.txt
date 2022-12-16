@@ -191,8 +191,24 @@ Train: Loss:0.10, acc:0.97
 Test: Loss:0.14, acc:0.95
 Train: Loss:0.22, acc:0.92
 Test: Loss:0.23, acc:0.91
+
 lstm_256_256_512_512neurons
 Train: Loss:1.42, acc:0.64
 Test: Loss:0.09, acc:1.00
 Train: Loss:1.30, acc:0.64
 Test: Loss:0.37, acc:0.83
+all_ds
+
+all_ds
+without attention
+Train: Loss:1.14, acc:0.55
+Test: Loss:1.29, acc:0.52
+
+with attention
+Train: Loss:1.17, acc:0.55
+Test: Loss:1.35, acc:0.50
+_tess_ravdess_lstm
+Train: Loss:0.68, acc:0.75
+Test: Loss:0.80, acc:0.71
+Train: Loss:0.87, acc:0.74
+Test: Loss:1.03, acc:0.71
