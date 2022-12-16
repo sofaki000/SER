@@ -3,7 +3,8 @@ from data_utilities.data_utilities import get_transformed_data
 from keras_models.attention_model import get_model_with_additive_attention
 from keras_models.gru_models import get_gru_model, get_gru_model_with_attention, get_gru_model_with_more_layers, \
     get_gru_model_with_attention_and_more_layers
-from keras_models.lstm_models import get_lstm_model_with_dropout_and_attention, get_lstm_model_with_dropout
+from keras_models.lstm_models import get_lstm_model_with_dropout_and_attention, get_lstm_model_with_dropout, \
+    get_lstm_model_with_dropout_more_layers, get_lstm_model_with_dropout_and_attention_more_layers
 from utilities.plot_utilities import plot_validation_and_train_acc_2_models
 from utilities.train_utilities import train_model_and_save_results
 
@@ -27,11 +28,15 @@ f.write(f'{experiment_name}\n')
 # with additive attention:
 model_with_additive_attention = get_model_with_additive_attention(num_of_output_classes=output_classes, input_dim=n_features, lr=0.01)
 
-gru_model = get_gru_model_with_more_layers(num_features=n_features,output_classes=output_classes)
-gru_model_with_attention = get_gru_model_with_attention_and_more_layers(num_features=n_features,output_classes=output_classes)
+gru_model = get_gru_model_with_more_layers(num_features=n_features,
+                                           output_classes=output_classes)
+gru_model_with_attention = get_gru_model_with_attention_and_more_layers(num_features=n_features,
+                                                                        output_classes=output_classes)
 
-lstm_model_with_attention = get_lstm_model_with_dropout_and_attention(num_features=n_features, output_classes=output_classes)
-lstm_model = get_lstm_model_with_dropout(num_features=n_features, output_classes=output_classes)
+lstm_model_with_attention = get_lstm_model_with_dropout_and_attention_more_layers(num_features=n_features,
+                                                                                  output_classes=output_classes)
+lstm_model = get_lstm_model_with_dropout_more_layers(num_features=n_features,
+                                                     output_classes=output_classes)
 # lstm layer expects input in shape: samples, time series, features
 
 #lstm_model = get_lstm_model_with_attention(time_steps=1, input_dim=40)

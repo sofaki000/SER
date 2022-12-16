@@ -26,7 +26,7 @@ def get_gru_model_with_more_layers(num_features,output_classes):
         Dropout(0.2),
         Dense(128, activation='relu'),
         Dropout(0.2),
-        Dense(64, activation='relu'),
+        Dense(128, activation='relu'),
         Dropout(0.2),
         Dense(output_classes, activation='softmax')
     ])
@@ -34,6 +34,21 @@ def get_gru_model_with_more_layers(num_features,output_classes):
     return model
 
 
+def get_gru_model_with_attention_and_more_layers(num_features,output_classes):
+    model = Sequential([
+        GRU(126, return_sequences=True, input_shape=(num_features, 1)),
+        Attention(units=128),
+        Dense(128, activation='relu'),
+        Dropout(0.2),
+        Dense(128, activation='relu'),
+        Dropout(0.2),
+        Dense(128, activation='relu'),
+        Dropout(0.2),
+        Dense(output_classes, activation='softmax')
+    ])
+
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return model
 #123,32, 64,32
 # 256,512,512-> better train, worse test
 def get_gru_model_with_attention(num_features,output_classes):
@@ -52,18 +67,3 @@ def get_gru_model_with_attention(num_features,output_classes):
     plot_model(model, 'dense_model.png', show_shapes=True)
     return model
 
-get_gru_model_with_attention(num_features=123,output_classes=7)
-
-def get_gru_model_with_attention_and_more_layers(num_features,output_classes):
-    model = Sequential([
-        GRU(126, return_sequences=True, input_shape=(num_features, 1)),
-        Attention(units=128),
-        Dense(128, activation='relu'),
-        Dropout(0.2),
-        Dense(64, activation='relu'),
-        Dropout(0.2),
-        Dense(output_classes, activation='softmax')
-    ])
-
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    return model
