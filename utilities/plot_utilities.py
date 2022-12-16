@@ -149,7 +149,22 @@ def plot_confusion_matrix(model1, x_test, y_test):
     plt.show()
 
 
+def plot_correlation(df):
+    correlation = df.corr()
+    plt.figure(figsize=(10, 10))
+    sns.heatmap(correlation, vmax=1, square=True, annot=True, cmap='cubehelix')
+    plt.title('Correlation between different features')
+    plt.show()
 
+def plot_PCA(X):
+    X_std = StandardScaler().fit_transform(X)
+    pca = PCA().fit(X_std)
+    plt.plot(np.cumsum(pca.explained_varianceratio))
+    plt.xlim(0, len(X_std), 1)
+    plt.xlabel('Number of components')
+    plt.ylabel('Cumulative explained variance')
+    plt.show()
+    
 # Create scaler
 # scaler = StandardScaler()
 # train_samples = Samples(load_test_data(dataset_number_to_load=4))
