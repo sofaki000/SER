@@ -12,7 +12,7 @@ autoencoder_saved_with_compress_path = f'{autoencoder_config.saved_models_path}a
 f = open(f"{configuration.experiments_results_text_path}/test_results.txt", "a")
 
 
-x_train, y_train, x_test, y_test = get_transformed_data(number_of_samples_to_load=-1, one_dataset=True)
+x_train, y_train, x_test, y_test = get_transformed_data(number_of_samples_to_load=-1)
 
 output_classes = 7 # how many classes we have to classify
 n_samples = x_train.shape[0]
@@ -74,9 +74,6 @@ def run_model_with_autoencoded_features(model):
     del X_test_encode
     del X_train_encode
 
-    f.close()
-
-
 def run_plain_model(model):
     ############################# Without adding autoencoder in model
 
@@ -120,3 +117,5 @@ run_model_with_autoencoded_features(model_with_autoencoder2)
 
 model_without_autoencoder3 = get_model(num_of_output_classes=output_classes, input_dim=n_inputs, lr=autoencoder_config.learning_rate)
 run_plain_model(model_without_autoencoder3)
+
+f.close()

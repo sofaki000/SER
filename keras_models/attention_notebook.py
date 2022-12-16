@@ -2,7 +2,7 @@ from keras.saving.save import load_model
 from keras import Model
 from matplotlib import pyplot as plt, cm
 import numpy as np
-from keras_models.attention_model import get_model_with_attention, Attention
+from keras_models.attention_model import get_model_with_additive_attention, Attention
 from data_utilities.data_utilities import get_transformed_data
 
 
@@ -39,7 +39,7 @@ def main():
     n_inputs = data_x.shape[1]  # number of features
     time_steps, input_dim, output_dim =  n_inputs, 1, 1
     # Define/compile the model.
-    model = get_model_with_attention(time_steps, input_dim)
+    model = get_model_with_additive_attention(time_steps, input_dim)
 
     # train.
     model.fit(data_x, data_y, epochs=10)

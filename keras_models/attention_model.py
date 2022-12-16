@@ -193,7 +193,7 @@ def get_dense_model(num_of_output_classes,input_dim, lr=0.01):
 	return model
 
 
-def get_model_with_attention(num_of_output_classes,input_dim, lr=0.01):
+def get_model_with_additive_attention(num_of_output_classes, input_dim, lr=0.01):
 	model = Sequential()
 	model.add(Dense(128, input_dim=input_dim, activation='relu'))
 	model.add(BatchNormalization())

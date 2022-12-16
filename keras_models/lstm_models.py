@@ -2,6 +2,8 @@ from keras import Model, Sequential
 from keras.layers import Reshape, Dropout, GRU
 from keras.layers import LSTM
 from keras.layers import Input, Dense
+from keras.utils.vis_utils import plot_model
+
 from keras_models.attention_model import Attention
 
 
@@ -42,7 +44,11 @@ def get_lstm_model_with_dropout_and_attention(num_features, output_classes):
         Dense(output_classes, activation='softmax')
     ])
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+    plot_model(model, 'dense_model.png', show_shapes=True)
     return model
+
+get_lstm_model_with_dropout_and_attention(num_features=123, output_classes=7)
 
 def get_lstm_model_with_dropout_and_more_attention_layers(num_features, output_classes):
     model = Sequential([

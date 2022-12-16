@@ -2,6 +2,8 @@ import keras.optimizers as optim
 from keras import Sequential
 from keras.layers import Dense
 from keras.layers import BatchNormalization
+from keras.utils.vis_utils import plot_model
+
 
 def get_model(num_of_output_classes,input_dim, lr=0.01):
 	model = Sequential()
@@ -19,9 +21,10 @@ def get_model(num_of_output_classes,input_dim, lr=0.01):
 	#optimizer = optim.Adam(learning_rate=lr)
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	# plot the model
-	# plot_model(model, 'model.png', show_shapes=True)
+	plot_model(model, 'dense_model.png', show_shapes=True)
 	return model
 
+get_model(num_of_output_classes=7,input_dim=123, lr=0.01)
 def get_trained_model(trainX, trainy, n_epochs,num_of_output_classes):
 	model = get_model(num_of_output_classes=num_of_output_classes,input_dim=40)
 	# train model
