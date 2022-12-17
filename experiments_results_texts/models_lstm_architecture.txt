@@ -1,0 +1,238 @@
+2 layers, 64*64
+Train: Loss:0.20, acc:0.80
+Test: Loss:0.20, acc:0.80
+2 layers, 64*64
+Train: Loss:0.17, acc:0.83
+Test: Loss:0.17, acc:0.83
+more_neurons_more_layers
+Train: Loss:0.20, acc:0.80
+Test: Loss:0.20, acc:0.80
+more_neurons_more_layers_less
+Train: Loss:0.21, acc:0.80
+Test: Loss:0.21, acc:0.80
+
+more_neurons_more_layers_less
+Train: Loss:0.17, acc:0.83
+Test: Loss:0.17, acc:0.83
+more_neurons_more_layers_less_with_es
+Train: Loss:0.17, acc:0.83
+Test: Loss:0.17, acc:0.83
+
+gru
+Train: Loss:0.20, acc:0.80
+Test: Loss:0.20, acc:0.80
+gru -> more samples
+Train: Loss:0.14, acc:0.86
+Test: Loss:0.14, acc:0.86
+gru_v2
+Train: Loss:0.17, acc:0.83
+Test: Loss:0.17, acc:0.83
+lstm_with_dropout
+Train: Loss:0.20, acc:0.80
+Test: Loss:0.20, acc:0.80
+lstm_with_dropout
+Train: Loss:0.17, acc:0.83
+Test: Loss:0.17, acc:0.83
+lstm_with_dropout_shuffled
+Train: Loss:0.20, acc:0.80
+Test: Loss:0.20, acc:0.80
+
+lstm_with_dropout_shuffled and dropout
+
+Train: Loss:0.17, acc:0.83
+Test: Loss:0.17, acc:0.83
+lstm_correct_cls
+lstm_correct_cls
+lstm_correct_cls
+Train: Loss:1.15, acc:0.71
+Test: Loss:1.19, acc:0.67
+
+lstm_correct_cls
+without atte:
+Train: Loss:0.44, acc:0.93
+Test: Loss:1.15, acc:0.50
+with attent:
+Train: Loss:0.38, acc:0.93
+Test: Loss:1.55, acc:0.50
+lstm_correct_cls
+Train: Loss:0.34, acc:0.86
+Test: Loss:0.41, acc:0.84
+Train: Loss:0.37, acc:0.85
+Test: Loss:0.41, acc:0.83
+gru
+gru
+lstm_big_validation
+Train: Loss:0.83, acc:0.71
+Test: Loss:2.56, acc:0.17
+Train: Loss:0.99, acc:0.71
+Test: Loss:2.61, acc:0.17
+
+whole ds:lstm_big_validation
+Train: Loss:0.39, acc:0.85
+Test: Loss:0.48, acc:0.83
+with attention:
+Train: Loss:0.37, acc:0.85
+Test: Loss:0.47, acc:0.84
+lstm_correct_input_shape
+lstm_correct_input_shape
+Train: Loss:0.85, acc:0.64
+Test: Loss:1.11, acc:0.67
+Train: Loss:0.99, acc:0.64
+Test: Loss:1.24, acc:0.67
+lstm_correct_input_shape
+lstm_correct_input_shape
+Train: Loss:1.62, acc:0.29
+Test: Loss:3.02, acc:0.00
+Train: Loss:1.85, acc:0.29
+Test: Loss:3.19, acc:0.00
+
+2nd ds: lstm_correct_input_shape
+without attention:
+Train: Loss:0.47, acc:0.80
+Test: Loss:0.59, acc:0.77
+with attention:
+Train: Loss:0.46, acc:0.81
+Test: Loss:0.57, acc:0.77
+
+
+lstm_cr_input_shape_more_neurons -> sta more neurons beltiwthike to attention acc sto test
+Train: Loss:0.51, acc:0.78
+Test: Loss:0.47, acc:0.79
+
+Train: Loss:0.47, acc:0.80
+Test: Loss:0.44, acc:0.83
+
+added_layer -> went way worse
+Train: Loss:0.54, acc:0.77
+Test: Loss:0.66, acc:0.73
+Train: Loss:0.47, acc:0.81
+Test: Loss:0.56, acc:0.79
+
+
+
+gru
+Train: Loss:0.48, acc:0.81
+Test: Loss:0.48, acc:0.81
+Train: Loss:0.53, acc:0.80
+Test: Loss:0.55, acc:0.78
+
+gru_whole_ds
+Train: Loss:0.50, acc:0.80
+Test: Loss:0.57, acc:0.79
+Train: Loss:0.49, acc:0.81
+Test: Loss:0.54, acc:0.80
+
+gru_whole_ds_more_neurons
+Train: Loss:0.54, acc:0.79
+Test: Loss:0.55, acc:0.79
+Train: Loss:0.52, acc:0.81
+Test: Loss:0.50, acc:0.81
+gru_whole_ds_more_neurons
+gru_whole_ds_more_neurons
+Train: Loss:1.83, acc:0.57
+Test: Loss:3.21, acc:0.50
+Train: Loss:2.30, acc:0.64
+Test: Loss:4.71, acc:0.50
+gru_whole_ds_more_neurons
+Train: Loss:1.42, acc:0.79
+Test: Loss:8.54, acc:0.17
+Train: Loss:1.72, acc:0.86
+Test: Loss:15.49, acc:0.17
+
+gru_whole_ds_more_neurons
+Train: Loss:0.46, acc:0.83
+Test: Loss:0.46, acc:0.83
+Train: Loss:0.53, acc:0.79
+Test: Loss:0.52, acc:0.79
+gru_whole_ds_v2
+
+gru_whole_ds_v2 less neurons
+Train: Loss:0.53, acc:0.79
+Test: Loss:0.58, acc:0.78
+Train: Loss:0.50, acc:0.81
+Test: Loss:0.53, acc:0.81
+
+gru_whole_ds_less_neurons
+Train: Loss:0.51, acc:0.80
+Test: Loss:0.48, acc:0.80
+Train: Loss:0.54, acc:0.79
+Test: Loss:0.50, acc:0.80
+
+gru_whole_ds_less_neurons
+Train: Loss:0.52, acc:0.80
+Test: Loss:0.56, acc:0.79
+Train: Loss:0.49, acc:0.81
+Test: Loss:0.53, acc:0.80
+
+lstm_256_256_512_512neurons
+without attention:
+Train: Loss:0.49, acc:0.81
+Test: Loss:0.54, acc:0.78
+with attention:
+Train: Loss:0.50, acc:0.80
+Test: Loss:0.55, acc:0.78
+lstm_256_256_512_512neurons
+lstm_256_256_512_512neurons
+
+Train: Loss:1.32, acc:0.50
+Test: Loss:2.48, acc:0.00
+Train: Loss:2.48, acc:0.50
+Test: Loss:10.50, acc:0.00
+lstm_256_256_512_512neurons
+
+lstm_256_256_512_512neurons
+Train: Loss:0.33, acc:0.88
+Test: Loss:0.33, acc:0.87
+Train: Loss:0.24, acc:0.92
+Test: Loss:0.30, acc:0.89
+
+lstm_256_256_512_512neurons
+
+Train: Loss:0.10, acc:0.97
+Test: Loss:0.14, acc:0.95
+Train: Loss:0.22, acc:0.92
+Test: Loss:0.23, acc:0.91
+
+lstm_256_256_512_512neurons
+Train: Loss:1.42, acc:0.64
+Test: Loss:0.09, acc:1.00
+Train: Loss:1.30, acc:0.64
+Test: Loss:0.37, acc:0.83
+
+all_ds
+
+all_ds
+without attention
+Train: Loss:1.14, acc:0.55
+Test: Loss:1.29, acc:0.52
+
+with attention
+Train: Loss:1.17, acc:0.55
+Test: Loss:1.35, acc:0.50
+
+_tess_ravdess_lstm
+Train: Loss:0.68, acc:0.75
+Test: Loss:0.80, acc:0.71
+Train: Loss:0.87, acc:0.74
+Test: Loss:1.03, acc:0.71
+
+
+_tess_ravdess_lstm_and_gru
+
+lstm
+without att
+Train: Loss:0.68, acc:0.75
+Test: Loss:0.77, acc:0.72
+with att
+Train: Loss:0.63, acc:0.79
+Test: Loss:0.73, acc:0.75
+
+gru:
+with att
+Train: Loss:0.67, acc:0.76
+Test: Loss:0.77, acc:0.75
+without att
+Train: Loss:0.70, acc:0.74
+Test: Loss:0.82, acc:0.72
+
+_tess_crema_lstm_and_gru

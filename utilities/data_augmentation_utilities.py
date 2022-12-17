@@ -1,9 +1,4 @@
-import librosa
 import numpy as np
-from IPython.lib.display import Audio
-from matplotlib import pyplot as plt
-import numpy as np # linear algebra
-import matplotlib.pyplot as plt
 import librosa
 import librosa.display
 import warnings
@@ -17,6 +12,7 @@ def add_noise(data):
 def stretch(data, rate=0.8):
     #returns a smaller array - must transform to return an array with the same size
     #as the other data augmentation processes
+<<<<<<< HEAD
     stretched_data =  librosa.effects.time_stretch(data, rate)
     if len(stretched_data) < len(data):
         zeros_appended_size = len(data) - len(stretched_data)
@@ -24,6 +20,17 @@ def stretch(data, rate=0.8):
         stretched_data.append(zeros_appended)
     elif len(stretched_data) > len(data):
         stretched_data = stretched_data[0:len(data)]
+=======
+    stretched_data = librosa.effects.time_stretch(data, rate)
+    if len(stretched_data) < len(data):
+        zeros_appended_size = len(data) - len(stretched_data)
+        zeros_appended = np.zeros(zeros_appended_size)
+        stretched_data = np.concatenate((stretched_data, zeros_appended))
+
+    elif len(stretched_data) > len(data):
+        stretched_data = stretched_data[0:len(data)]
+
+>>>>>>> dbbbcf2b402063c9dafa93a3eb772c8a5626f937
     return stretched_data
 
 def shift(data):

@@ -1,0 +1,14 @@
+
+code: https://github.com/aris-ai/Audio-and-text-based-emotion-recognition
+attention based ser
+Attention Based Fully Convolutional Network for
+Speech Emotion Recognition
+
+
+ATTENTION:
+https://machinelearningmastery.com/the-attention-mechanism-from-scratch/ ->theory
+https://machinelearningmastery.com/adding-a-custom-attention-layer-to-recurrent-neural-network-in-keras/
+
+
+
+visializing activation: https://raghakot.github.io/keras-vis/vis.visualization/#visualize_saliency
