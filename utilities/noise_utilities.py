@@ -26,7 +26,7 @@ def augment_data(filename):
     noisy_data = add_noise(data)
     #print(data.shape, "pitched",pitched_data.shape ,"/nstr", stretched_data.shape, "/nnoisy dt",noisy_data.shape)
     #input = (data, pitched_data, stretched_data, noisy_data)
-    #TODO: return 4 matrices
+
     return data,pitched_data, stretched_data, noisy_data, sampling_rate
 
 
