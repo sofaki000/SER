@@ -21,7 +21,7 @@ def get_model(num_of_output_classes,input_dim, lr=0.01):
 	#optimizer = optim.Adam(learning_rate=lr)
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	# plot the model
-	plot_model(model, 'dense_model.png', show_shapes=True)
+#	plot_model(model, 'dense_model.png', show_shapes=True)
 	return model
 
 get_model(num_of_output_classes=7,input_dim=123, lr=0.01)

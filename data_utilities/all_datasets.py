@@ -9,10 +9,10 @@ if not sys.warnoptions:
     warnings.simplefilter("ignore")
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-Ravdess = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\sav\\audio_speech_actors_01-24\\"
-Crema = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\AudioWAV\\"
-Tess = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\TESS Toronto emotional speech set data\\TESS Toronto emotional speech set data\\"
-Savee = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\AudioData\\"
+Ravdess = "C:\\Users\\user\\Desktop\\Speech Emotion Recognition Project\\github - ser\\SER\\data\\sav\\audio_speech_actors_01-24\\"
+Crema = "C:\\Users\\user\\Desktop\\Speech Emotion Recognition Project\\github - ser\\SER\\data\\AudioWAV\\"
+Tess = "C:\\Users\\user\\Desktop\\Speech Emotion Recognition Project\\github - ser\\SER\\data\\TESS Toronto emotional speech set data\\TESS Toronto emotional speech set data\\"
+Savee = "C:\\Users\\user\\Desktop\\Speech Emotion Recognition Project\\github - ser\\SER\\data\\AudioData\\"
 
 def load_ravdess_dataset(load_all_data, number_of_samples_to_load_per_ds):
     # data preparation - RAVDESS
@@ -178,10 +178,10 @@ def get_dataframe_with_all_datasets(number_of_samples_to_load=20):
     else:
         number_of_samples_to_load_per_ds= int(number_of_samples_to_load/2)
 
-    #Ravdess_df = load_ravdess_dataset(load_all_data, number_of_samples_to_load_per_ds)
+    Ravdess_df = load_ravdess_dataset(load_all_data, number_of_samples_to_load_per_ds)
     Crema_df = load_crema_dataset(load_all_data, number_of_samples_to_load_per_ds)
     Tess_df = load_tess_dataset(load_all_data, number_of_samples_to_load_per_ds)
-    #Savee_df = get_savee_dataset(load_all_data, number_of_samples_to_load_per_ds)
+    Savee_df = get_savee_dataset(load_all_data, number_of_samples_to_load_per_ds)
 
 
     # creating Dataframe using all the 4 dataframes we created so far.

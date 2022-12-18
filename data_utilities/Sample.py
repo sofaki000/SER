@@ -11,7 +11,7 @@ class Sample():
     def get_encoding(self):
         return self.encoding
     def get_features(self):
-        return self.features.reshape(122)
+        return self.features.reshape(283)
 
 
 class Samples():
@@ -37,7 +37,7 @@ class Samples():
     def get_features(self):
         features = []
         for sample in self.samples:
-            features.append(sample.get_features().reshape(122))
+            features.append(sample.get_features().reshape(283))
 
         return features
     def get_size(self):

@@ -2,7 +2,7 @@
 import os
 import configuration
 
-experiments_folder = 'C:\\Users\\Lenovo\\Desktop\\ser\\SER\\experiments_results_graphs\\autoencoder_experiments\\final\\WHOLE_DS\\'
+experiments_folder = 'C:\\Users\\user\\Desktop\\Speech Emotion Recognition Project\\github - ser\\SER\\experiments_results_graphs\\autoencoder_experiments\\final\\WHOLE_DS\\'
 
 os.makedirs(experiments_folder, exist_ok=True)
 

@@ -1,4 +1,5 @@
-from keras.saving.save import load_model
+#from keras.saving.save import load_model
+from tensorflow.python.keras.saving.save import load_model
 
 import configuration
 import experiments_configuration.autoencoder_exp_config as autoencoder_config

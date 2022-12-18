@@ -24,39 +24,21 @@ def draw_spectrogram_for_emotion(df, emotion):
     show_spectrogram(data, sampling_rate, emotion)
     # Audio(path)
 
-<<<<<<< HEAD
-#def extract_mfcc(filename):
- #   data, sampling_rate = librosa.load(filename, duration=3, offset=0.5)
- #   mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
- #   return mfcc
-
-=======
->>>>>>> dbbbcf2b402063c9dafa93a3eb772c8a5626f937
 def augment_data(filename):
     data, sampling_rate = librosa.load(filename, duration=3, offset=0.5)
     pitched_data = pitch(data, sampling_rate)
     stretched_data = stretch(data)
     noisy_data = add_noise(data)
-    #print(data.shape, "pitched",pitched_data.shape ,"/nstr", stretched_data.shape, "/nnoisy dt",noisy_data.shape)
-    #input = (data, pitched_data, stretched_data, noisy_data)
 
-    return data,pitched_data, stretched_data, noisy_data, sampling_rate
-
-<<<<<<< HEAD
-=======
     return data,pitched_data, stretched_data, noisy_data,sampling_rate
 
->>>>>>> dbbbcf2b402063c9dafa93a3eb772c8a5626f937
 
 def show_wave(data, sr, emotion):
     plt.figure(figsize=(10, 4))
     plt.title(emotion, size=20)
     librosa.display.waveshow(data, sr=sr)
     plt.show()
-<<<<<<< HEAD
-=======
 
->>>>>>> dbbbcf2b402063c9dafa93a3eb772c8a5626f937
 #TODO: check an megethos arxeioy mas ikanopoiei na einai diaforetiko
 def show_spectrogram(data, sr, emotion):
     x = librosa.stft(data)
@@ -68,20 +50,6 @@ def show_spectrogram(data, sr, emotion):
 
 
 
-<<<<<<< HEAD
-def extract_features(data, sampling_rate):
-    from librosa.feature import spectral
-    mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
-    mfcc_delta = librosa.feature.delta(mfcc, order=1, mode='nearest')
-    mfcc_delta2 = librosa.feature.delta(mfcc, order=2, mode='nearest')
-    zero_crossing_rate = np.mean(sum(spectral.zero_crossing_rate(y=data, frame_length=512, hop_length=256)))
-    freqs, times, D = librosa.reassigned_spectrogram(data, fill_nan=True)
-    sc = np.mean(librosa.feature.spectral_centroid(S=np.abs(D), freq=freqs))
-    feature_vector = np.concatenate((mfcc, mfcc_delta, mfcc_delta2, np.array([zero_crossing_rate]), np.array([sc])), axis=0)
-    feature_vector = np.reshape(feature_vector, (1, len(feature_vector)))
-    return feature_vector
-=======
->>>>>>> dbbbcf2b402063c9dafa93a3eb772c8a5626f937
 
 def extract_mfcc(data, sampling_rate):
     mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
@@ -101,8 +69,6 @@ def get_spectral_centroid(data):
     sc = librosa.feature.spectral_centroid(S=S)
     return sc
 
-<<<<<<< HEAD
-=======
 def get_sample_from_file(label, data, sampling_rate, encoding):
     features_for_sample = get_features_for_sample(data, sampling_rate)
 
@@ -147,4 +113,3 @@ def get_features_for_sample(data, sampling_rate):
     #feature_vector = np.concatenate((mfcc, mfcc_delta, mfcc_delta2, np.array([zero_crossing_rate]), np.array([sc])), axis=0)
     feature_vector = np.reshape(result, (1, len(result)))
     return feature_vector
->>>>>>> dbbbcf2b402063c9dafa93a3eb772c8a5626f937

@@ -12,7 +12,7 @@ trainX, trainY, testX, testY = get_transformed_data(number_of_samples_to_load=-1
 output_classes = 7
 n_samples = len(trainX)
 n_test_samples = len(testX)
-n_features = 122
+n_features = 283
 
 trainX = trainX.reshape(n_samples,n_features,1) # we reshape so it is lstm friendly
 testX = testX.reshape(n_test_samples,n_features,1)
