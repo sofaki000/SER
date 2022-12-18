@@ -1,4 +1,8 @@
+from matplotlib import pyplot as plt
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
 import configuration
+import numpy as np
 from data_utilities.data_utilities import get_transformed_data
 from keras_models.attention_model import get_model_with_additive_attention
 from keras_models.gru_models import get_gru_model, get_gru_model_with_attention, get_gru_model_with_more_layers, \
@@ -8,8 +12,8 @@ from keras_models.lstm_models import get_lstm_model_with_dropout_and_attention, 
 from utilities.plot_utilities import plot_validation_and_train_acc_2_models
 from utilities.train_utilities import train_model_and_save_results
 
-trainX, trainY, testX, testY = get_transformed_data(number_of_samples_to_load=-1)
-output_classes = 8
+trainX, trainY, testX, testY = get_transformed_data(number_of_samples_to_load=20)
+output_classes = 7
 n_samples = len(trainX)
 n_test_samples = len(testX)
 n_features = 263
@@ -99,3 +103,47 @@ plot_validation_and_train_acc_2_models(file_name=f"Comparison_gru_with_attention
 #    #                                                   best_model_name="model_dense_additive_attention")
 
 f.close()
+
+#confusion matrix for gru_model
+model1 = gru_model
+model1.fit(trainX, trainY)
+y_pred = model1.predict(testX)
+y_pred = np.argmax(y_pred, axis=1)
+testY = np.argmax(testY, axis=1)
+cm = confusion_matrix(testY, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.show()
+
+#confusion matrix for gru_model with attention
+model2 = gru_model_with_attention
+model2.fit(trainX, trainY)
+y_pred = model2.predict(testX)
+y_pred = np.argmax(y_pred, axis=1)
+testY = np.argmax(testY, axis=1)
+cm = confusion_matrix(testY, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.show()
+
+#confusion model for lstm
+model3 = lstm_model
+model3.fit(trainX, trainY)
+y_pred = model3.predict(testX)
+y_pred = np.argmax(y_pred, axis=1)
+testY = np.argmax(testY, axis=1)
+cm = confusion_matrix(testY, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.show()
+
+#confusion model for lstm with attention
+model4 = lstm_model_with_attention
+model4.fit(trainX, trainY)
+y_pred = model4.predict(testX)
+y_pred = np.argmax(y_pred, axis=1)
+testY = np.argmax(testY, axis=1)
+cm = confusion_matrix(testY, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.show()

@@ -185,8 +185,8 @@ def get_dataframe_with_all_datasets(number_of_samples_to_load=20):
 
 
     # creating Dataframe using all the 4 dataframes we created so far.
-    # data_path = pd.concat([Ravdess_df, Crema_df, Tess_df, Savee_df], axis = 0)
-    data_path = pd.concat([Crema_df, Tess_df], axis=0)
+    data_path = pd.concat([Ravdess_df, Crema_df, Tess_df, Savee_df], axis = 0)
+    #data_path = pd.concat([Crema_df, Tess_df], axis=0)
     data_path.to_csv("data_path.csv",index=False)
     data_path.head()
     return data_path

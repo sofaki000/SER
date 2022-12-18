@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 from data_utilities.data_handler import split_data, suffle_data, get_samples
 from utilities.preprocessing_utilities import preprocess_all_samples
 
-def get_transformed_data(number_of_samples_to_load=20, one_dataset = True):
+def get_transformed_data(number_of_samples_to_load=20, one_dataset = False):
     # we get the samples from filesystem
     samples = get_samples(number_of_samples_to_load, encoder=OneHotEncoder, one_dataset=one_dataset)
 
