@@ -9,10 +9,10 @@ from utilities.plot_utilities import plot_validation_and_train_acc_2_models
 from utilities.train_utilities import train_model_and_save_results
 
 trainX, trainY, testX, testY = get_transformed_data(number_of_samples_to_load=-1)
-output_classes = 7
+output_classes = 8
 n_samples = len(trainX)
 n_test_samples = len(testX)
-n_features = 283
+n_features = 263
 
 trainX = trainX.reshape(n_samples,n_features,1) # we reshape so it is lstm friendly
 testX = testX.reshape(n_test_samples,n_features,1)
@@ -26,7 +26,7 @@ f.write(f'{experiment_name}\n')
 #gru_model_with_attention = get_gru_model_with_attention(num_features=n_features,output_classes=output_classes)
 
 # with additive attention:
-model_with_additive_attention = get_model_with_additive_attention(num_of_output_classes=output_classes, input_dim=n_features, lr=0.01)
+#model_with_additive_attention = get_model_with_additive_attention(num_of_output_classes=output_classes, input_dim=n_features, lr=0.01)
 
 gru_model = get_gru_model_with_more_layers(num_features=n_features,
                                            output_classes=output_classes)
@@ -90,12 +90,12 @@ plot_validation_and_train_acc_2_models(file_name=f"Comparison_gru_with_attention
 
 
 ############ model with additive attention #####################
-accuracy_file_name_additive_attention = f'{configuration.attention_experiments_results_plots_path}\\additive_attention_acc{experiment_name}.png'
-loss_file_name_additive_attention = f'{configuration.attention_experiments_results_plots_path}\\additive_attention_loss{experiment_name}.png'
-lstm_history_with_attention = train_model_and_save_results(model_with_additive_attention,
-                                                      accuracy_file_name_additive_attention,
-                                                      loss_file_name_additive_attention,
-                                                      trainX, trainY, testX,testY, f,
-                                                      best_model_name="model_dense_additive_attention")
+# accuracy_file_name_additive_attention = f'{configuration.attention_experiments_results_plots_path}\\additive_attention_acc{experiment_name}.png'
+# loss_file_name_additive_attention = f'{configuration.attention_experiments_results_plots_path}\\additive_attention_loss{experiment_name}.png'
+# #lstm_history_with_attention = train_model_and_save_results(model_with_additive_attention,
+# #                                                      accuracy_file_name_additive_attention,
+#  #                                                     loss_file_name_additive_attention,
+#   #                                                    trainX, trainY, testX,testY, f,
+#    #                                                   best_model_name="model_dense_additive_attention")
 
 f.close()

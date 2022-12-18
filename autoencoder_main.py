@@ -1,5 +1,7 @@
 #from keras.saving.save import load_model
-from tensorflow.python.keras.saving.save import load_model
+#from tensorflow.python.keras.saving.save import load_model
+from keras.models import load_model
+from sklearn.metrics import ConfusionMatrixDisplay
 
 import configuration
 import experiments_configuration.autoencoder_exp_config as autoencoder_config
@@ -8,6 +10,8 @@ from keras_models.models import get_model
 from data_utilities.data_utilities import get_transformed_data
 from utilities.plot_utilities import plot_validation_and_train_loss, plot_validation_and_train_acc
 from utilities.train_utilities import get_callbacks_for_training
+import numpy as np
+import matplotlib.pyplot as plt
 
 autoencoder_saved_with_compress_path = f'{autoencoder_config.saved_models_path}autoencoder_with_compress.h5'
 f = open(f"{configuration.experiments_results_text_path}/test_results.txt", "a")
@@ -15,7 +19,7 @@ f = open(f"{configuration.experiments_results_text_path}/test_results.txt", "a")
 
 x_train, y_train, x_test, y_test = get_transformed_data(number_of_samples_to_load=-1)
 
-output_classes = 7 # how many classes we have to classify
+output_classes = 8 # how many classes we have to classify
 n_samples = x_train.shape[0]
 n_inputs = x_train.shape[1] # number of features
 
@@ -120,3 +124,14 @@ model_without_autoencoder3 = get_model(num_of_output_classes=output_classes, inp
 run_plain_model(model_without_autoencoder3)
 
 f.close()
+
+#confusion matrix
+model1 = model_with_autoencoder2
+model1.fit(x_train, y_train)
+y_pred = model1.predict(x_test)
+y_pred = np.argmax(y_pred, axis=1)
+y_test = np.argmax(y_test, axis=1)
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.show()

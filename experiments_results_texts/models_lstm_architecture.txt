@@ -236,3 +236,45 @@ Train: Loss:0.70, acc:0.74
 Test: Loss:0.82, acc:0.72
 
 _tess_crema_lstm_and_gru
+_tess_crema_lstm_and_gru_v2
+_tess_crema_lstm_and_gru_v2
+_tess_crema_lstm_and_gru_v2
+_tess_crema_lstm_and_gru_v2
+_tess_crema_lstm_and_gru_v2
+_tess_crema_lstm_and_gru_v2
+_tess_crema_lstm_and_gru_v2
+_tess_crema_lstm_and_gru_v2
+_tess_crema_lstm_and_gru_v2
+Train: Loss:1.43, acc:0.43
+Test: Loss:1.41, acc:0.50
+_tess_crema_lstm_and_gru_v2
+Train: Loss:1.73, acc:0.31
+Test: Loss:1.77, acc:0.37
+Train: Loss:1.18, acc:0.56
+Test: Loss:1.82, acc:0.43
+Train: Loss:1.24, acc:0.57
+Test: Loss:1.93, acc:0.40
+Train: Loss:1.46, acc:0.47
+Test: Loss:2.01, acc:0.37
+_tess_crema_lstm_and_gru_v2
+_tess_crema_lstm_and_gru_v2
+_tess_crema_lstm_and_gru_v2
+_tess_crema_lstm_and_gru_v2
+_tess_crema_lstm_and_gru_v2
+Train: Loss:1.89, acc:0.31
+Test: Loss:2.22, acc:0.32
+Train: Loss:1.86, acc:0.32
+Test: Loss:2.16, acc:0.20
+Train: Loss:1.63, acc:0.39
+Test: Loss:1.90, acc:0.25
+Train: Loss:1.94, acc:0.28
+Test: Loss:2.17, acc:0.25
+_tess_crema_lstm_and_gru_v2
+Train: Loss:1.83, acc:0.25
+Test: Loss:2.01, acc:0.22
+Train: Loss:1.68, acc:0.35
+Test: Loss:1.77, acc:0.32
+Train: Loss:1.64, acc:0.37
+Test: Loss:1.80, acc:0.35
+Train: Loss:1.85, acc:0.25
+Test: Loss:1.98, acc:0.23

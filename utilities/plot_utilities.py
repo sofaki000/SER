@@ -1,8 +1,10 @@
 import numpy as np
 import pandas as pd
+from librosa import display
 from matplotlib import pyplot as plt
+from sklearn.decomposition import PCA
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
-
+import librosa
 import seaborn as sns
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
@@ -210,6 +212,45 @@ def plot_tsne(rescaled_data, target, title):
     plt.title(title, size=15)
     plt.savefig("T_SNE_components")
 
+def plot_MFCC(samples, sample_rate, label):
+    S = librosa.feature.melspectrogram(samples, sr=sample_rate, n_mels=128)
+    # Convert to log scale (dB). We'll use the peak power (max) as reference.
+    # log_S = librosa.power_to_db(S, ref=np.max)
+    # plt.figure(figsize=(12, 4))
+    mfcc = librosa.feature.mfcc(y=samples, sr=sample_rate, n_mfcc=40)
+    display.specshow(mfcc, sr=sample_rate, x_axis='time', y_axis='mel')
+    title = 'MFCCs of emotion ' + label
+    plt.title(title)
+    plt.colorbar(format='%+02.0f dB')
+    plt.tight_layout()
+    plt.show()
 
+def plot_delta_MFCC(samples, sample_rate, label):
+    S = librosa.feature.melspectrogram(samples, sr=sample_rate, n_mels=128)
+    # Convert to log scale (dB). We'll use the peak power (max) as reference.
+    # log_S = librosa.power_to_db(S, ref=np.max)
+    # plt.figure(figsize=(12, 4))
+    mfcc = librosa.feature.mfcc(y=samples, sr=sample_rate, n_mfcc=40)
+    delta_mfcc = librosa.feature.delta(mfcc)
+    display.specshow(delta_mfcc, sr=sample_rate, x_axis='time', y_axis='mel')
+    title = 'Delta MFCCs of emotion ' + label
+    plt.title(title)
+    plt.colorbar(format='%+02.0f dB')
+    plt.tight_layout()
+    plt.show()
+
+def plot_delta2_MFCC(samples, sample_rate, label):
+    S = librosa.feature.melspectrogram(samples, sr=sample_rate, n_mels=128)
+    # Convert to log scale (dB). We'll use the peak power (max) as reference.
+    # log_S = librosa.power_to_db(S, ref=np.max)
+    # plt.figure(figsize=(12, 4))
+    mfcc = librosa.feature.mfcc(y=samples, sr=sample_rate, n_mfcc=40)
+    delta2_mfcc = librosa.feature.delta(mfcc, order=2)
+    display.specshow(delta2_mfcc, sr=sample_rate, x_axis='time', y_axis='mel')
+    title = 'Delta-deltas of MFCCs of emotion ' + label
+    plt.title(title)
+    plt.colorbar(format='%+02.0f dB')
+    plt.tight_layout()
+    plt.show()
 # Apply function
-# plot_tsne(X_rescaled, y, '2D-plot of the first and second T-SNE components')
+#plot_tsne(X_rescaled, y, '2D-plot of the first and second T-SNE components')

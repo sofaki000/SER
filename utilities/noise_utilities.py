@@ -90,26 +90,33 @@ def get_features_for_sample(data, sampling_rate):
     zcr = np.mean(librosa.feature.zero_crossing_rate(y=data,  frame_length=512, hop_length=256).T, axis=0)
     result = np.hstack((result, zcr))  # stacking horizontally
 
+    #print("Number of ZCR features:", zcr.shape)
     # Chroma_stft
     stft = np.abs(librosa.stft(data))
     chroma_stft = np.mean(librosa.feature.chroma_stft(S=stft, sr=sampling_rate).T, axis=0)
     result = np.hstack((result, chroma_stft))  # stacking horizontally
+    #print("Number of Chroma features:", chroma_stft.shape)
 
-    # MFCC
-    mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate).T, axis=0)
-    result = np.hstack((result, mfcc))  # stacking horizontally
+    # # MFCC
+    # mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate).T, axis=0)
+    # result = np.hstack((result, mfcc))  # stacking horizontally
+    # print("Number of MFCC features", mfcc.shape)
 
     # Root Mean Square Value
     rms = np.mean(librosa.feature.rms(y=data).T, axis=0)
     result = np.hstack((result, rms))  # stacking horizontally
+    #print("Number of rms features:", chroma_stft.shape)
 
     # MelSpectogram
     mel = np.mean(librosa.feature.melspectrogram(y=data, sr=sampling_rate).T, axis=0)
     result = np.hstack((result, mel))  # stacking horizontally
+    #print("Number of Mel features:", mel.shape)
 
     freqs, times, D = librosa.reassigned_spectrogram(data, fill_nan=True)
     sc = np.mean(librosa.feature.spectral_centroid(S=np.abs(D), freq=freqs))
+    #print("Number of SC features:", sc)
     result = np.hstack((result, np.array([sc])))
     #feature_vector = np.concatenate((mfcc, mfcc_delta, mfcc_delta2, np.array([zero_crossing_rate]), np.array([sc])), axis=0)
     feature_vector = np.reshape(result, (1, len(result)))
+
     return feature_vector
