@@ -83,14 +83,14 @@ def get_samples(number_of_samples_to_load=20, encoder=OneHotEncoder, one_dataset
     samples = []
 
     for i in range(df_all['Emotions'].size):
-
         filename_for_sample = df_all['Path'].iloc[i]
         label = df_all['Emotions'].iloc[i]
 
-        data, pitched_data,streched_data, noisy_data,sampling_rate = augment_data(filename_for_sample)
+        # data, pitched_data,streched_data, noisy_data,sampling_rate = augment_data(filename_for_sample)
+        data1, data2 ,sampling_rate= augment_data(filename_for_sample)
 
         encoding = encodings[i]
-        emotion_sample = get_sample_from_file(label, data, sampling_rate, encoding)
+        emotion_sample = get_sample_from_file(label, data1, data2, sampling_rate, encoding)
 
         samples.append(emotion_sample)
 

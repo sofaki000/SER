@@ -25,12 +25,16 @@ def draw_spectrogram_for_emotion(df, emotion):
     # Audio(path)
 
 def augment_data(filename):
-    data, sampling_rate = librosa.load(filename, duration=3, offset=0.5)
-    pitched_data = pitch(data, sampling_rate)
-    stretched_data = stretch(data)
-    noisy_data = add_noise(data)
 
-    return data,pitched_data, stretched_data, noisy_data,sampling_rate
+    # Load 0.05 seconds of a file, starting 0 seconds in
+    first_half, sampling_rate = librosa.load(filename,duration=0.05, offset=0)
+    second_half , sampling_rate = librosa.load(filename,duration=0.05, offset=0.05)
+
+    # pitched_data = pitch(data, sampling_rate)
+    # stretched_data = stretch(data)
+    # noisy_data = add_noise(data)
+
+    return first_half, second_half,sampling_rate # data,pitched_data, stretched_data, noisy_data,sampling_rate
 
 
 def show_wave(data, sr, emotion):
@@ -69,10 +73,13 @@ def get_spectral_centroid(data):
     sc = librosa.feature.spectral_centroid(S=S)
     return sc
 
-def get_sample_from_file(label, data, sampling_rate, encoding):
-    features_for_sample = get_features_for_sample(data, sampling_rate)
+def get_sample_from_file(label, data1, data2, sampling_rate, encoding):
+    features_for_sample1 = get_features_for_sample(data1, sampling_rate)
+    features_for_sample2 = get_features_for_sample(data2, sampling_rate)
 
-    return Sample(features=features_for_sample, name=label, encoding=encoding)
+    features = np.concatenate((features_for_sample1, features_for_sample2))
+
+    return Sample(features=features, name=label, encoding=encoding)
 
 
 def get_features_for_sample(data, sampling_rate):
