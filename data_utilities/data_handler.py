@@ -71,13 +71,17 @@ def loadTestSet(dataset_number_to_load=0):
     return paths, labels
 
 
-def get_samples(number_of_samples_to_load=20, encoder=OneHotEncoder, one_dataset=False,
-                use_augmented_data = False,  load_tess=True, load_savee=False):
+def get_samples(load_tess, load_savee, load_crema, number_of_samples_to_load=20,
+                encoder=OneHotEncoder, one_dataset=False, use_augmented_data = False):
+
+
+
     if one_dataset:
         df_all = get_dataframe_with_one_dataset(number_of_samples_to_load)
     else:
-        df_all = get_dataframe_with_all_datasets(number_of_samples_to_load, load_tess=load_tess,
-                                                 load_savee=load_savee)
+        df_all = get_dataframe_with_all_datasets(number_of_samples_to_load=number_of_samples_to_load,
+                                                load_tess=load_tess, load_savee=load_savee,
+                                                         load_crema=load_crema)
 
     enc = encoder()
     encodings = enc.fit_transform(df_all[['Emotions']]).toarray()
@@ -91,7 +95,8 @@ def get_samples(number_of_samples_to_load=20, encoder=OneHotEncoder, one_dataset
 
         # data, pitched_data,streched_data, noisy_data,sampling_rate = augment_data(filename_for_sample)
         first_half, second_half, pitched_data_first_half, pitched_data_second_half, \
-        stretched_data_first_half, stretched_data_second_half, noisy_data_first_half, noisy_data_second_half, sampling_rate = augment_data(filename_for_sample)
+        stretched_data_first_half, stretched_data_second_half, noisy_data_first_half, \
+        noisy_data_second_half, sampling_rate = augment_data(filename_for_sample)
 
         encoding = encodings[i]
         emotion_sample = get_sample_from_file(label, first_half, second_half, sampling_rate, encoding)

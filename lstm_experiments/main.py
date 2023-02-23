@@ -35,7 +35,7 @@ output_classes = 7
 n_features = 283
 
 trainX, trainY, testX, testY = get_transformed_data(number_of_samples_to_load=-1,
-                                                    load_tess=True, load_savee=True)
+                                                    load_tess=True, load_savee=True, load_crema=True)
 n_samples = len(trainX)
 n_test_samples = len(testX)
 

@@ -56,7 +56,7 @@ def load_ravdess_dataset(load_all_data, number_of_samples_to_load_per_ds):
     Ravdess_df.head()
     return Ravdess_df
 
-def load_crema_dataset(load_all_data,number_of_samples_to_load_per_ds):
+def load_crema_dataset(load_all_data,number_of_samples_to_load_per_ds=-10):
     crema_directory_list = os.listdir(Crema)
 
     file_emotion = []
@@ -173,15 +173,10 @@ def get_savee_dataset(load_all_data, number_of_samples_to_load_per_ds):
     Savee_df = pd.concat([emotion_df, path_df], axis=1)
     return Savee_df
 
-def get_dataframe_with_all_datasets(number_of_samples_to_load=20,
-                                    load_tess=True, load_savee=False, load_crema=True):
+def get_dataframe_with_all_datasets(load_tess, load_savee, load_crema):
     load_all_data = False
-    if number_of_samples_to_load==-1:
-        load_all_data = True
-        number_of_samples_to_load_per_ds = 0
-    else:
-        number_of_samples_to_load_per_ds= int(number_of_samples_to_load/2)
 
+    number_of_samples_to_load_per_ds = -10
     #Ravdess_df = load_ravdess_dataset(load_all_data, number_of_samples_to_load_per_ds)
 
     if load_crema:
@@ -192,14 +187,25 @@ def get_dataframe_with_all_datasets(number_of_samples_to_load=20,
         Savee_df = get_savee_dataset(load_all_data, number_of_samples_to_load_per_ds)
 
     if load_tess and load_savee and load_crema:
+        print("loading tess and crema and savee")
         data_path = pd.concat([Tess_df,Savee_df,Crema_df], axis=0)
-    if load_tess and load_savee:
+    elif load_tess and load_savee:
+        print("loading tess and savee")
         data_path = pd.concat([Tess_df,Savee_df], axis=0)
+    elif load_tess and load_crema:
+        print("loading tess and crema")
+        data_path = pd.concat([Tess_df,Crema_df], axis=0)
+    elif load_crema and load_savee:
+        print("loading crema and savee")
+        data_path = pd.concat([Crema_df,Savee_df], axis=0)
     elif load_savee:
+        print("loading savee")
         data_path = pd.concat([Savee_df], axis=0)
     elif load_tess:
+        print("loading tess")
         data_path = pd.concat([Tess_df], axis=0)
     elif load_crema:
+        print("loading crema")
         data_path = pd.concat([Crema_df], axis=0)
 
     # creating Dataframe using all the 4 dataframes we created so far.

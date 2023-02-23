@@ -7,10 +7,12 @@ from data_utilities.Sample import Samples
 from data_utilities.data_handler import split_data, suffle_data, get_samples
 from utilities.preprocessing_utilities import preprocess_all_samples
 
-def get_transformed_data(number_of_samples_to_load=20, one_dataset = False,  load_tess=True, load_savee=False):
+def get_transformed_data(number_of_samples_to_load, load_tess, load_savee,load_crema):
     # we get the samples from filesystem
-    samples = get_samples(number_of_samples_to_load, encoder=OneHotEncoder,
-                          one_dataset=one_dataset,  load_tess=True, load_savee=False)
+    one_dataset = False
+    samples = get_samples(load_tess, load_savee, load_crema, number_of_samples_to_load=number_of_samples_to_load,
+                encoder=OneHotEncoder, one_dataset=one_dataset, use_augmented_data = False)
+
 
     # we shuffle the samples
     samples = suffle_data(samples)
