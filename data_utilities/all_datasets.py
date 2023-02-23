@@ -10,10 +10,12 @@ if not sys.warnoptions:
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 Ravdess = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\sav\\audio_speech_actors_01-24\\"
-Crema = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\AudioWAV\\"
+Crema = "C:\\Users\\Lenovo\\Desktop\\τεχνολογία ήχου και εικόνας\\SER\\SER\\data\\AudioWAV\\"
 #Tess = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\TESS Toronto emotional speech set data\\TESS Toronto emotional speech set data\\"
-Tess= "C:\\Users\\Lenovo\\Desktop\\τεχνολογία ήχου και εικόνας\\FINAL\\SER\\data\\"
-Savee = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\AudioData\\"
+#Tess= "C:\\Users\\Lenovo\\Desktop\\τεχνολογία ήχου και εικόνας\\FINAL\\SER\\data\\test_parent\\"
+Tess ="C:\\Users\\Lenovo\\Desktop\\τεχνολογία ήχου και εικόνας\\FINAL\\SER\\data\\TESS Toronto emotional speech set data\\"
+#Tess= "C:\\Users\\Lenovo\\Desktop\\τεχνολογία ήχου και εικόνας\\FINAL\\SER\\data\\test_parent_2\\"
+Savee = "C:\\Users\\Lenovo\\Desktop\\τεχνολογία ήχου και εικόνας\\SER\\SER\\data\\AudioData\\"
 
 def load_ravdess_dataset(load_all_data, number_of_samples_to_load_per_ds):
     # data preparation - RAVDESS
@@ -171,7 +173,8 @@ def get_savee_dataset(load_all_data, number_of_samples_to_load_per_ds):
     Savee_df = pd.concat([emotion_df, path_df], axis=1)
     return Savee_df
 
-def get_dataframe_with_all_datasets(number_of_samples_to_load=20):
+def get_dataframe_with_all_datasets(number_of_samples_to_load=20,
+                                    load_tess=True, load_savee=False, load_crema=True):
     load_all_data = False
     if number_of_samples_to_load==-1:
         load_all_data = True
@@ -180,15 +183,29 @@ def get_dataframe_with_all_datasets(number_of_samples_to_load=20):
         number_of_samples_to_load_per_ds= int(number_of_samples_to_load/2)
 
     #Ravdess_df = load_ravdess_dataset(load_all_data, number_of_samples_to_load_per_ds)
-   # Crema_df = load_crema_dataset(load_all_data, number_of_samples_to_load_per_ds)
-    Tess_df = load_tess_dataset(load_all_data, number_of_samples_to_load_per_ds)
-    #Savee_df = get_savee_dataset(load_all_data, number_of_samples_to_load_per_ds)
 
+    if load_crema:
+        Crema_df = load_crema_dataset(load_all_data, number_of_samples_to_load_per_ds)
+    if load_tess:
+        Tess_df = load_tess_dataset(load_all_data, number_of_samples_to_load_per_ds)
+    if load_savee:
+        Savee_df = get_savee_dataset(load_all_data, number_of_samples_to_load_per_ds)
+
+    if load_tess and load_savee and load_crema:
+        data_path = pd.concat([Tess_df,Savee_df,Crema_df], axis=0)
+    if load_tess and load_savee:
+        data_path = pd.concat([Tess_df,Savee_df], axis=0)
+    elif load_savee:
+        data_path = pd.concat([Savee_df], axis=0)
+    elif load_tess:
+        data_path = pd.concat([Tess_df], axis=0)
+    elif load_crema:
+        data_path = pd.concat([Crema_df], axis=0)
 
     # creating Dataframe using all the 4 dataframes we created so far.
     # data_path = pd.concat([Ravdess_df, Crema_df, Tess_df, Savee_df], axis = 0)
     # data_path = pd.concat([Crema_df, Tess_df], axis=0)
-    data_path = pd.concat([Tess_df], axis=0)
+
     data_path.to_csv("data_path.csv",index=False)
     data_path.head()
     return data_path
@@ -214,14 +231,7 @@ def get_dataframe_with_one_dataset(number_of_samples_to_load=20):
     data_path.head()
     return data_path
 
-#data_path = pd.concat([Tess_df], axis = 0)
-# Tess_df.to_csv("Tess_df.csv",index=False)
-# Tess_df.head()
-# data = pd.read_csv("Tess_df.csv")
-# em = []
-# for i in data.Emotions:
-#     em.append(i)
-# print(em)
+
 
 def plot_emotion_dist(data_path):
     #emotions distribution in dataset

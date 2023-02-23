@@ -26,11 +26,16 @@ def create_model_with_additive_attention(input_shape, output_classes):
     model.compile(loss='mae', optimizer='adam',metrics='accuracy')
     return model
 
-epochs = 1
-output_classes = 5
+epochs = 30
+
+# apo to 1 ews 2o dataset
+#output_classes = 6
+# for all
+output_classes = 7
 n_features = 283
 
-trainX, trainY, testX, testY = get_transformed_data(number_of_samples_to_load=-1)
+trainX, trainY, testX, testY = get_transformed_data(number_of_samples_to_load=-1,
+                                                    load_tess=True, load_savee=True)
 n_samples = len(trainX)
 n_test_samples = len(testX)
 
@@ -45,8 +50,12 @@ train_loss, train_acc = model.evaluate(trainX, trainY)
 test_loss, test_acc = model.evaluate(testX, testY)
 
 f = open(f"lstm_experiments.txt", "a")
-content_train = f'Train: Loss:{train_loss:.2f}, acc:{train_acc:.2f}\n'
-content_test = f'Test: Loss:{test_loss:.2f}, acc:{test_acc:.2f}\n'
+f.write(f'\n\n------------------------------\n\n')
+experiment_name = "no_augmentation_tess_savee"
+f.write(experiment_name)
+f.write(f'train size:{trainX.shape[0]}, test size:{testX.shape[0]}\n')
+content_train = f'train: loss:{train_loss:.2f}, acc:{train_acc:.2f}\n'
+content_test = f'test: loss:{test_loss:.2f}, acc:{test_acc:.2f}\n'
 f.write(content_train)
 f.write(content_test)
 print(content_train)
@@ -56,7 +65,10 @@ accuracies_content = f'test acc:{test_acc:.2f}, train acc:{train_acc:.2f}'
 
 epoch_stopped = training_callbacks[0].stopped_epoch
 
-plot_validation_and_train_acc(file_name='acc',
-                                  title=f"Accuracy, epoch stopped:{epoch_stopped},{accuracies_content}", history=history)
+if epoch_stopped ==0:
+    epoch_stopped = epochs
 
-plot_validation_and_train_loss(file_name='loss', title=f"Loss, epoch stopped:{epoch_stopped}", history=history)
+plot_validation_and_train_acc(file_name=f'{experiment_name}_acc', title=f"Accuracy, epoch stopped:{epoch_stopped},{accuracies_content}",
+                              history=history)
+
+plot_validation_and_train_loss(file_name=f'{experiment_name}_loss', title=f"Loss, epoch stopped:{epoch_stopped}", history=history)

@@ -71,28 +71,46 @@ def loadTestSet(dataset_number_to_load=0):
     return paths, labels
 
 
-def get_samples(number_of_samples_to_load=20, encoder=OneHotEncoder, one_dataset=False):
+def get_samples(number_of_samples_to_load=20, encoder=OneHotEncoder, one_dataset=False,
+                use_augmented_data = False,  load_tess=True, load_savee=False):
     if one_dataset:
         df_all = get_dataframe_with_one_dataset(number_of_samples_to_load)
     else:
-        df_all = get_dataframe_with_all_datasets(number_of_samples_to_load)
+        df_all = get_dataframe_with_all_datasets(number_of_samples_to_load, load_tess=load_tess,
+                                                 load_savee=load_savee)
 
     enc = encoder()
     encodings = enc.fit_transform(df_all[['Emotions']]).toarray()
 
     samples = []
 
+
     for i in range(df_all['Emotions'].size):
         filename_for_sample = df_all['Path'].iloc[i]
         label = df_all['Emotions'].iloc[i]
 
         # data, pitched_data,streched_data, noisy_data,sampling_rate = augment_data(filename_for_sample)
-        data1, data2 ,sampling_rate= augment_data(filename_for_sample)
+        first_half, second_half, pitched_data_first_half, pitched_data_second_half, \
+        stretched_data_first_half, stretched_data_second_half, noisy_data_first_half, noisy_data_second_half, sampling_rate = augment_data(filename_for_sample)
 
         encoding = encodings[i]
-        emotion_sample = get_sample_from_file(label, data1, data2, sampling_rate, encoding)
-
+        emotion_sample = get_sample_from_file(label, first_half, second_half, sampling_rate, encoding)
         samples.append(emotion_sample)
+
+        if use_augmented_data:
+            emotion_sample_pitched = get_sample_from_file(label, pitched_data_first_half,
+                                                          pitched_data_second_half,
+                                                          sampling_rate, encoding)
+
+            emotion_sample_streched_data = get_sample_from_file(label, stretched_data_first_half,
+                                                                stretched_data_second_half, sampling_rate, encoding)
+            emotion_sample_noisy_data = get_sample_from_file(label, noisy_data_first_half,
+                                                                    noisy_data_second_half, sampling_rate, encoding)
+
+
+            samples.append(emotion_sample_pitched)
+            samples.append(emotion_sample_streched_data)
+            samples.append(emotion_sample_noisy_data)
 
         if i%20==0:
             print(f'{i+1} samples loaded...')
@@ -108,6 +126,7 @@ def split_data(samples, test_percentage=0.3):
 
 def suffle_data(samples):
     samples_array = samples.get_samples_array()
+
     import random
     random.shuffle(samples_array)
     return Samples(samples_array)

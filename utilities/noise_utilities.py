@@ -30,12 +30,21 @@ def augment_data(filename):
     first_half, sampling_rate = librosa.load(filename,duration=0.05, offset=0)
     second_half , sampling_rate = librosa.load(filename,duration=0.05, offset=0.05)
 
-    # pitched_data = pitch(data, sampling_rate)
-    # stretched_data = stretch(data)
-    # noisy_data = add_noise(data)
 
-    return first_half, second_half,sampling_rate # data,pitched_data, stretched_data, noisy_data,sampling_rate
+    # adding pitched data
+    pitched_data_first_half = pitch(first_half, sampling_rate)
+    pitched_data_second_half = pitch(second_half, sampling_rate)
 
+    # adding streched data
+    stretched_data_first_half = stretch(first_half)
+    stretched_data_second_half = stretch(second_half)
+
+    # adding noisy data
+    noisy_data_first_half = add_noise(first_half)
+    noisy_data_second_half = add_noise(second_half)
+
+    return first_half, second_half,pitched_data_first_half, pitched_data_second_half, \
+           stretched_data_first_half, stretched_data_second_half,noisy_data_first_half, noisy_data_second_half, sampling_rate
 
 def show_wave(data, sr, emotion):
     plt.figure(figsize=(10, 4))
