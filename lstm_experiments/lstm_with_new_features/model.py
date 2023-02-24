@@ -82,7 +82,38 @@ def create_multihead_attention_model(features, num_heads=4, d_model=128, dff=512
     return model
 
 
+from tensorflow.keras.layers import ConvLSTM2D, BatchNormalization, Flatten, Dense
+from tensorflow.keras.models import Sequential
+import numpy as np
 
+
+def get_ConvLSTM_model(features):
+    # # Assuming your features array is called `features`
+    # batch_size, time_steps, num_features = features.shape
+    # features = features.reshape(batch_size, time_steps, 1, num_features, 1)
+
+    # Reshape features array to (batch_size, time_steps, rows, cols, num_channels)
+    rows = 64
+    cols = 2
+    num_channels = 1
+    features = features.reshape(features.shape[0], features.shape[1], rows, cols, num_channels)
+
+    # Define model architecture
+    model = Sequential()
+    model.add(
+        ConvLSTM2D(filters=64, kernel_size=(1, 1), activation='relu', input_shape=(None, rows, cols, num_channels),
+                   return_sequences=True))
+    model.add(BatchNormalization())
+    model.add(ConvLSTM2D(filters=32, kernel_size=(1, 1), activation='relu', return_sequences=True))
+    model.add(BatchNormalization())
+    model.add(ConvLSTM2D(filters=16, kernel_size=(1, 1), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Flatten())
+    model.add(Dense(units=128, activation='relu'))
+    model.add(Dense(units=output_classes, activation='softmax'))
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+    return model
 
 
 
