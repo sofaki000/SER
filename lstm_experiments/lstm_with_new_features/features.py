@@ -12,10 +12,7 @@ output_classes = 7
 
 
 
-def extract_features():
-    load_tess = True
-    load_savee= False
-    load_crema = False
+def extract_features(load_tess,  load_savee, load_crema):
     df_all = get_dataframe_with_all_datasets(load_tess=load_tess, load_savee=load_savee, load_crema=load_crema)
     duration = 3
     sr = 22050
@@ -55,19 +52,9 @@ def extract_features():
     # Reshape features to have batch size as first dimension
     features = features.reshape((features.shape[0], num_frames, n_mels))
 
-    return features,labels
-
-def get_lstm_model(features):
-    # Build the model
-    model = Sequential()
-    model.add(LSTM(units=64, input_shape=(features.shape[1], features.shape[2])))
-    model.add(Dropout(0.5))
-    model.add(Dense(output_classes, activation='sigmoid'))
-
-    # Compile the model
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-    # Predict the output
-    #output = model.predict(features)
-
-    return model
+    split_on_index = int(0.8*len(features))
+    train_features = features[0:split_on_index ,:,:]
+    test_features = features[split_on_index:,:,:]
+    train_labels =labels[0:split_on_index]
+    test_labels = labels[split_on_index:]
+    return train_features, test_features, train_labels, test_labels
