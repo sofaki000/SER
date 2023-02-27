@@ -11,7 +11,9 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 Ravdess = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\sav\\audio_speech_actors_01-24\\"
 Crema = "C:\\Users\\Lenovo\\Desktop\\τεχνολογία ήχου και εικόνας\\SER\\SER\\data\\AudioWAV\\"
-#Tess = "C:\\Users\\Lenovo\\Desktop\\ser\\SER\\data\\TESS Toronto emotional speech set data\\TESS Toronto emotional speech set data\\"
+
+tess_cnn = "C:\\Users\\Lenovo\\Desktop\\τεχνολογία ήχου και εικόνας\\FINAL\\SER\\data\\lstm_cnn_data\\"
+
 #Tess= "C:\\Users\\Lenovo\\Desktop\\τεχνολογία ήχου και εικόνας\\FINAL\\SER\\data\\test_parent\\"
 Tess ="C:\\Users\\Lenovo\\Desktop\\τεχνολογία ήχου και εικόνας\\FINAL\\SER\\data\\TESS Toronto emotional speech set data\\"
 #Tess= "C:\\Users\\Lenovo\\Desktop\\τεχνολογία ήχου και εικόνας\\FINAL\\SER\\data\\test_parent_2\\"

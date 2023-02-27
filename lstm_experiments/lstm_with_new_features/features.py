@@ -12,7 +12,7 @@ output_classes = 7
 
 
 
-def extract_features(load_tess,  load_savee, load_crema):
+def extract_features(load_tess,  load_savee, load_crema, return_all=False):
     df_all = get_dataframe_with_all_datasets(load_tess=load_tess, load_savee=load_savee, load_crema=load_crema)
     duration = 3
     sr = 22050
@@ -52,6 +52,8 @@ def extract_features(load_tess,  load_savee, load_crema):
     # Reshape features to have batch size as first dimension
     features = features.reshape((features.shape[0], num_frames, n_mels))
 
+    if return_all:
+        return features, labels
     split_on_index = int(0.8*len(features))
     train_features = features[0:split_on_index ,:,:]
     test_features = features[split_on_index:,:,:]

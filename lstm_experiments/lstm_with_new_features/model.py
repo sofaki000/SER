@@ -1,4 +1,4 @@
-from keras.layers import Flatten, Concatenate, Reshape, Masking
+from keras.layers import Flatten, Concatenate, Reshape, Masking, TimeDistributed
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 import numpy as np
@@ -6,7 +6,7 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, LSTM, Dense, concatenate, Permute, Dot, Activation, Lambda
 from tensorflow.keras import backend as K
 
-output_classes = 7  # len(np.unique(labels))
+output_classes = 6 #7  # len(np.unique(labels))
 
 
 def get_lstm_model(features):
@@ -89,8 +89,6 @@ import numpy as np
 
 def get_ConvLSTM_model(features):
     # # Assuming your features array is called `features`
-    # batch_size, time_steps, num_features = features.shape
-    # features = features.reshape(batch_size, time_steps, 1, num_features, 1)
 
     # Reshape features array to (batch_size, time_steps, rows, cols, num_channels)
     rows = 64
@@ -101,15 +99,13 @@ def get_ConvLSTM_model(features):
     # Define model architecture
     model = Sequential()
     model.add(
-        ConvLSTM2D(filters=64, kernel_size=(1, 1), activation='relu', input_shape=(None, rows, cols, num_channels),
+        ConvLSTM2D(filters=32, kernel_size=(1, 1), activation='relu', input_shape=(None, rows, cols, num_channels),
                    return_sequences=True))
-    model.add(BatchNormalization())
-    model.add(ConvLSTM2D(filters=32, kernel_size=(1, 1), activation='relu', return_sequences=True))
     model.add(BatchNormalization())
     model.add(ConvLSTM2D(filters=16, kernel_size=(1, 1), activation='relu'))
     model.add(BatchNormalization())
     model.add(Flatten())
-    model.add(Dense(units=128, activation='relu'))
+    #model.add(Dense(units=128, activation='relu'))
     model.add(Dense(units=output_classes, activation='softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
@@ -118,3 +114,34 @@ def get_ConvLSTM_model(features):
 
 
 
+def get_lstm_model_with_timeseries_layer(x_train):
+    ann = Sequential()
+    ann.add(Dense(units=32, activation='relu', input_dim=x_train.shape[2]))
+
+    model = Sequential()
+    model.add(TimeDistributed(ann, input_shape=(x_train.shape[1], x_train.shape[2])))
+    model.add(LSTM(64, dropout=0.05, recurrent_dropout=0.05))
+    model.add(Dense(output_classes, activation='softmax'))
+
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return model
+
+
+def get_lstm_model_with_timeseries_layer_with_additive_attention(x_train):
+    ann = Sequential()
+    ann.add(Dense(units=32, activation='relu', input_dim=x_train.shape[2]))
+
+    model = Sequential()
+    model.add(TimeDistributed(ann, input_shape=(x_train.shape[1], x_train.shape[2])))
+    model.add(LSTM(64, dropout=0.05, recurrent_dropout=0.05, return_sequences=True))
+
+    attention = Dense(1, activation='tanh')(model.output)
+    attention = Activation('softmax')(attention)
+    attention = Dot(axes=1)([model.output, attention])
+    attention = Flatten()(attention)
+
+    output = Dense(output_classes, activation='softmax')(attention)
+
+    model = Model(inputs=model.input, outputs=output)
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return model
